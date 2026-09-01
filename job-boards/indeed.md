@@ -1,0 +1,35 @@
+# Indeed
+
+## Access
+
+MCP, `mcp__claude_ai_Indeed__*` — no browser and no sign-in gesture, the server carries the account.
+`get_resume()` returns the profile Indeed holds for the candidate (preferred titles, minimum salary):
+compare it with `DATA_DIR/preferences.md` whenever either side changes.
+
+## Search
+
+`search_jobs(search, location, country_code)` — one call per target role, with the location and
+country of `DATA_DIR/preferences.md` § Location. The call returns a list of results with job ids.
+
+## Read a posting
+
+`get_job_details(job_id)` gives the description, the salary, the publication date and the apply link.
+Call it on every result before scoring: the list returns old postings without saying so, and the
+publication date decides the `Freshness` dealbreaker.
+
+`get_company_data(companyName, …)` gives employee reviews, headcount and salary ranges — the look at
+the company that a `High` requires.
+
+## Apply on this board
+
+No apply tool. The apply link from `get_job_details` opens either the native Indeed Apply flow in the
+browser — attach the PDF resume rather than the Indeed profile, and answer the screening questions
+from the posting — or the company's own form, which is an ATS: `ats/index.md`.
+
+## Traps
+
+Results carry no age of their own, so a search alone cannot tell a fresh posting from a stale one.
+
+## Last tested
+
+never
