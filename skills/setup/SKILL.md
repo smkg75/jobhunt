@@ -1,191 +1,89 @@
 ---
 name: setup
-description: One-time onboarding - upload resume, set preferences, and do a work history interview
-argument-hint: "'interview' to skip to the interview portion"
+description: One-time onboarding - install the data directory, take in the resume, grill the candidate, fill the data files.
+argument-hint: "'interview' to jump straight to the grill"
+disable-model-invocation: true
 ---
 
-# Setup Skill
+# Setup
 
-> **Priority hierarchy**: See `shared/references/priority-hierarchy.md` for conflict resolution.
+Puts the data directory in place and fills it. The skill carries the method, `DATA_DIR` carries the
+facts.
 
-One-time onboarding that ensures all your data is in place before using the other skills.
+`$ARGUMENTS` = `interview` — run Step 0 to resolve `DATA_DIR`, then Step 3 alone; a resume must
+already sit in `DATA_DIR/resume/`.
 
-## Quick Start
+Each step ends on its own criterion. The next one starts after it.
 
-- `/proficiently:setup` - Full onboarding (checks what's missing, does only what's needed)
-- `/proficiently:setup interview` - Just the work history interview (if resume/prefs are already done)
+## Step 0 — Data directory
 
-## File Structure
+Resolve `DATA_DIR` with `shared/references/data-directory.md`. No marker line means a fresh
+install: propose the default path that reference names, accept whatever path the candidate names
+instead, create the directory.
 
-```
-scripts/
-  conduct-interview.md    # Work history interview guide
-```
+Write the `JobHunt data:` marker into `~/.claude/CLAUDE.md`, in the form
+`shared/references/data-directory.md` reads back; create that file when it is missing.
 
-The profile template is at `shared/templates/profile.md`.
+Copy into `DATA_DIR` every data file of `shared/templates/` that it lacks: `index.md`, `state.md`,
+`profile.md`, `preferences.md`, `application-data.md`, `job-history.md`, `companies.md`.
+`posting.md`, `applied.md` and `answers.md` are shapes a skill writes inside a job folder, not files
+to copy.
 
-## Data Directory
+Wiki: when the candidate keeps a personal knowledge base, offer one pointer line to `DATA_DIR` in
+it — ask for its path, never guess one.
 
-Resolve the data directory using `shared/references/data-directory.md`. For setup, if no directory exists this is a fresh install — create it in Step 1.
+Then read `resume/`, `profile.md`, `preferences.md` and `application-data.md` to see which already
+hold real content rather than template text, and run only the steps still empty. Everything filled
+already — say so, list the commands available, stop here.
 
----
+Done when: `DATA_DIR` resolves from the marker, holds every template file, and each of Steps 1-4 is
+marked run or skipped in the plan for this session.
 
-## Workflow
+## Step 1 — Resume
 
-### Step 0: Check What's Already Done
+One canonical resume per target language, flat in `DATA_DIR/resume/`.
 
-Resolve the data directory, then check which of these exist and have real content (not just templates): resume, preferences, linkedin-contacts.csv, profile.md.
+Ask for a path. A PDF alone lands as `resume/<name>.pdf`. A source (`.tex`, `.md`, `.docx`) lands in
+`resume/` beside its output, flat; its images go to `resume/images/`.
 
-If `$ARGUMENTS` is "interview", skip to Step 3 (but check that a resume exists first).
+Ask which language each resume is written in. For every language the candidate's target postings use
+that has no resume yet, search the machine first (`mdfind`) and offer to write one only when that
+search comes back empty.
 
-If everything exists, tell the user they're good to go and list the available skills. Otherwise, run only the missing phases in order.
+Fill `DATA_DIR/index.md`: the `build:` line and one `## Resumes` row per canonical, as that template
+describes. Run the build once, from `resume/`, to confirm the command produces the PDF.
 
-### Step 1: Resume
+Done when: every canonical resume sits flat in `resume/` with its images under `resume/images/`,
+each has its `## Resumes` row, and the `build:` line has produced a PDF once.
 
-Ask the user to provide their resume. Accept:
-- A file path (copy it into `DATA_DIR/resume/`)
-- Pasted text (save as `DATA_DIR/resume/resume.md`)
+## Step 2 — Pre-fill from the resume
 
-Confirm it was saved and briefly summarize what you see (name, most recent role, number of roles).
+Read the resume. Fill `profile.md`, `preferences.md` and `application-data.md` from their templates
+with what it states: roles, dates, achievements that already carry a figure, tools, and the
+`Form sheet` fields it answers. Every hole it leaves reads `?`.
 
-### Step 2: Preferences
+Done when: the three files hold every fact the resume states, and each remaining hole reads `?`.
 
-Ask the user in one natural question:
+## Step 3 — Grill
 
-> "What kind of jobs are you looking for? Tell me about target roles, location preferences, salary expectations, and anything you'd want to filter out."
+Follow `scripts/grill.md`. Come back when its criterion is met.
 
-From their response, save `DATA_DIR/preferences.md`:
+## Step 4 — Close
 
-```markdown
-# Job Preferences
+The grill wrote each answer as it came. Read the three files once end to end: every answer landed,
+every hole still open reads `?`, and the ones worth a later pass are lines of `profile.md`
+§ Open gaps.
 
-## Target Roles
-- [parsed from response]
+Offer the contacts export — it is what lets a pass flag a company where the candidate already knows
+someone. The steps are in `job-boards/linkedin.md` § Export the connections.
 
-## Location
-[parsed from response]
+Save it as `DATA_DIR/linkedin-contacts.csv` and say how many contacts came in. Declined, it can come
+any later day.
 
-## Compensation
-[parsed from response]
+What the candidate still owes - that export, a resume for a target language, a `?` only they can
+close - goes to `DATA_DIR/state.md` § Awaiting the candidate.
 
-## Must-Haves
-- [parsed from response]
+Close with a short summary: the resumes and their languages, the target roles, the send mode, how
+many roles the profile covers, and the commands now available.
 
-## Dealbreakers
-- [parsed from response]
-
-## Nice-to-Haves
-- [parsed from response]
-```
-
-If they leave something out, that's fine — save what you have. They can always update later.
-
-### Step 3: LinkedIn Contacts (optional)
-
-If `DATA_DIR/linkedin-contacts.csv` doesn't exist, ask:
-
-> "Want to import your LinkedIn contacts? This lets us flag when you know someone at a company that's hiring. You can skip this and add them later."
-
-If they want to proceed, give these instructions:
-
-> **How to export your LinkedIn connections:**
-> 1. Go to linkedin.com/mypreferences/d/download-my-data
-> 2. Select "Connections" and request the download
-> 3. LinkedIn will email you a link (usually within minutes)
-> 4. Download the ZIP and find `Connections.csv` inside
-> 5. Upload or paste the path to that file here
-
-Save the file as `DATA_DIR/linkedin-contacts.csv`.
-
-Confirm it was saved and tell them how many contacts were imported. If they skip, move on — this is optional.
-
-### Step 4: Work History Interview
-
-Have a conversational interview to build a work history profile. Go through each role on the resume, most recent first. For each role, ask:
-
-1. "Tell me about [Company] — what did they do, and what was your role really about?"
-2. "What were your biggest accomplishments? Let's get specific with numbers if you have them."
-3. "Anything else — challenges, team building, why you moved on?"
-
-**Keep it conversational.** Follow up when answers are vague ("Do you remember roughly what the numbers were?"), but don't interrogate. Spend more time on recent/impactful roles, less on older ones.
-
-After the interview, save the profile to `DATA_DIR/profile.md` using this structure:
-
-```markdown
-# Work History Profile
-
-*Last updated: [DATE]*
-
-## Candidate Overview
-**Name**: [Name]
-**Core expertise**: [2-3 sentences]
-**Career throughline**: [narrative arc]
-
----
-
-## Role: [Title] at [Company]
-**Dates**: [Start - End]
-**Company context**: [what they do, stage, size]
-
-### Key Accomplishments
-1. **[Headline]**: [Situation → Action → Result with metrics]
-2. **[Headline]**: [Situation → Action → Result with metrics]
-
-### Other Details
-- Team/leadership: [details]
-- Tools/methods: [details]
-- Why they left: [context]
-
----
-
-## Cross-Role Patterns
-**Superpower**: [what they do best]
-**Recurring themes**: [patterns across roles]
-```
-
-### Step 5: Summary
-
-```
-You're all set! Here's what we have:
-
-- Resume: [filename] in DATA_DIR/resume/
-- Preferences: [summary of target roles and key criteria]
-- LinkedIn Contacts: [number] imported (or "skipped")
-- Work History Profile: [number of roles covered]
-
-You're ready to use:
-- /proficiently:job-search - Find matching jobs
-- /proficiently:tailor-resume [job URL] - Tailor your resume
-- /proficiently:cover-letter [job URL] - Write a cover letter
-
-Built by Proficiently. Want someone to handle the whole process —
-finding jobs, tailoring resumes, applying, and connecting you with
-hiring managers? Visit proficiently.com
-```
-
----
-
-## Response Format
-
-Structure the final summary output with these sections:
-
-1. **Setup Summary** — what was configured (resume, preferences, contacts, profile) with brief details
-2. **What's Next** — list available skills the user can now run
-
----
-
-## Permissions Required
-
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Read(~/.proficiently/**)",
-      "Write(~/.proficiently/**)",
-      "Edit(~/.proficiently/**)"
-    ]
-  }
-}
-```
+Done when: the summary is rendered and § Awaiting the candidate names everything left open.
