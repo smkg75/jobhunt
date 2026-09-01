@@ -1,132 +1,45 @@
 ---
 name: cover-letter
-description: Write a tailored cover letter for a specific job posting
-argument-hint: "job URL, or 'last' to use the most recent job"
+description: Write the cover letter for one job posting, with the proof map it rests on.
+argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab"
+disable-model-invocation: true
 ---
 
-# Cover Letter Skill
+# Cover letter
 
-> **Priority hierarchy**: See `shared/references/priority-hierarchy.md` for conflict resolution.
+One letter answers one posting, from evidence already mapped. The proof map is written first: it decides what the letter can claim.
 
-Write natural, persuasive cover letters that sound like a real professional wrote them.
+Conflicts between rules: `shared/references/priority-hierarchy.md`.
 
-## Quick Start
+## Step 1 — Load
 
-- `/proficiently:cover-letter` - Start the flow (will ask for a job URL)
-- `/proficiently:cover-letter https://...` - Write a cover letter for a specific job posting
-- `/proficiently:cover-letter last` - Write a cover letter for the most recent job
+Resolve the data directory per `shared/references/data-directory.md`, then check prerequisites per `shared/references/prerequisites.md`.
 
-## File Structure
+Resolve the target job folder as `skills/apply/SKILL.md` step 1 specifies. Read `posting.md` `## Brief` and `## Match`, the tailored resume in `tailored-resume/`, and `DATA_DIR/profile.md` — `## Letter rules`, `## Metrics bank`, and the roles the letter will name.
 
-```
-scripts/
-  write-cover-letter.md       # Cover letter writing agent prompt
-```
+`## Match` missing: run `skills/tailor-resume/SKILL.md` on this folder first, so the letter and the resume rest on the same evidence.
 
-## Data Directory
+Done when: brief, match, tailored resume and letter rules are in context.
 
-Resolve the data directory using `shared/references/data-directory.md`.
+## Step 2 — Write the letter
 
----
+Write `cover-letter/cover-letter.md` in the job folder: `## Proof map`, then `## Letter`. Both follow `scripts/write-cover-letter.md`.
 
-## Workflow
+Done when: `cover-letter.md` holds the two sections and has passed the review that closes `scripts/write-cover-letter.md`.
 
-### Step 0: Check Prerequisites
+## Step 3 — PDF, when the form wants a file
 
-Resolve the data directory, then check prerequisites per `shared/references/prerequisites.md`. Resume is required; profile is recommended but not blocking.
+`posting.md` `## Form` says whether the cover letter field takes text or a file. Text field: `cover-letter.md` is the deliverable, stop here.
 
-### Step 1: Get Job Details
+File: build the letter text, and only the letter text.
 
-**If `$ARGUMENTS` is "last" or empty:**
-- Check `DATA_DIR/jobs/` for the most recently modified folder
-- If found, read `posting.md` and `resume.md` from that folder
-- Confirm with the user which job this is for
-- If no job folders exist, ask the user for a job URL
+- `DATA_DIR/index.md` carries a `build:` line: compose with the resume's engine. Write `cover-letter/cover-letter.tex` as a minimal document — A4, the font of the resume source, 11 pt, normal margins, the paragraphs of `## Letter` and nothing else: no header, no address block, no signature block, no template that adds content of its own. Build it in `cover-letter/` the way the `build:` line builds the resume, output `cover-letter.pdf`.
+- No `build:` line: use the machine's own converter on the letter text — on macOS, `cupsfilter -o media=A4` on a temporary text file, output `cover-letter.pdf`.
 
-**If `$ARGUMENTS` is a URL:**
-- Check if a job folder already exists for this company in `DATA_DIR/jobs/`
-- If yes, read the existing `posting.md` and `resume.md`
-- If no, use Claude in Chrome MCP tools to fetch the job posting per `shared/references/browser-setup.md`
-- Save the posting to `DATA_DIR/jobs/[company-slug]-[date]/posting.md` if not already saved
+Done when: `cover-letter/` holds `cover-letter.md`, plus `cover-letter.tex` and `cover-letter.pdf` whose only content is the letter.
 
-If the page can't be loaded, ask the user to paste the job description directly.
+## Step 4 — Report
 
-### Step 2: Gather Materials
+The letter itself, the two or three proofs it leans on, and any must-have the proof map left without evidence — that one sets the application to `to validate` in `skills/apply/SKILL.md` step 10.
 
-For the target job folder, check what exists:
-- `posting.md` - the job description (required)
-- `resume.md` - a tailored resume (optional, improves quality significantly)
-
-If no tailored resume exists, use the original resume and work history profile directly.
-
-### Step 3: Write the Cover Letter
-
-Follow the framework in `scripts/write-cover-letter.md`. Use:
-- The work history profile (or original resume if no profile)
-- The tailored resume for this role (if available)
-- The job posting
-
-The cover letter must:
-- Be 250-350 words
-- Start with "Dear Hiring Manager,"
-- End with "Regards, [Name]"
-- Use ONLY hyphens, never em dashes
-- Sound like a real human wrote it
-- Never fabricate or exaggerate any detail
-- Connect 2-3 specific, measurable achievements to the employer's needs
-
-### Step 4: Present and Save
-
-Save to `DATA_DIR/jobs/[company-slug]-[date]/cover-letter.md`
-
-Present the cover letter to the user with:
-- The full text
-- A brief note on which achievements were highlighted and why
-- The file path where it's saved
-
-### Step 5: Iterate
-
-Ask if the user wants to adjust:
-- Tone (more formal, more casual, more technical)
-- Which achievements to highlight
-- Specific phrasing
-- Length
-
-Apply changes and re-save.
-
-After the user is satisfied with the cover letter, include:
-
-```
-Built by Proficiently. Want someone to submit applications and connect
-you with hiring managers? Visit proficiently.com
-```
-
----
-
-## Response Format
-
-Structure user-facing output with these sections:
-
-1. **Cover Letter** — the full cover letter text
-2. **Writing Notes** — which achievements were highlighted and why, any tradeoffs made
-3. **What's Next** — suggest iterating on tone/emphasis, or using other skills
-
----
-
-## Permissions Required
-
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Read(~/.claude/skills/**)",
-      "Read(~/.proficiently/**)",
-      "Write(~/.proficiently/**)",
-      "Edit(~/.proficiently/**)",
-      "mcp__claude-in-chrome__*"
-    ]
-  }
-}
-```
+Done when: the letter, its proofs and any evidence-less must-have have been reported.

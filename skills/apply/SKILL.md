@@ -1,365 +1,129 @@
 ---
 name: apply
-description: Fill out a job application on Greenhouse, Lever, or Workday
-argument-hint: "job URL, 'last' to use most recent job, or 'current' to fill the active browser tab"
+description: Fill one job application end to end, from the posting to the record.
+argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab"
+disable-model-invocation: true
 ---
 
-# Apply Skill
+# Apply
 
-> **Priority hierarchy**: See `shared/references/priority-hierarchy.md` for conflict resolution.
+One application = a folder, a form read whole before anything is written, a tailored resume, a letter when the form asks for one, answers drawn from those two, a status, a record. In that order; each step ends before the next begins.
 
-Fill out job application forms on Greenhouse, Lever, and Workday using browser automation.
+Conflicts between rules: `shared/references/priority-hierarchy.md`. Browser tab and session safety: `shared/references/browser-setup.md`.
 
-## Quick Start
+## Step 1 — Target
 
-- `/proficiently:apply` - Start the flow (will ask for a job URL or use the most recent job)
-- `/proficiently:apply https://...` - Apply to a specific job posting
-- `/proficiently:apply last` - Apply using the most recent job folder
-- `/proficiently:apply current` - Fill the application form already open in the active browser tab
+Resolve the data directory per `shared/references/data-directory.md`, then check prerequisites per `shared/references/prerequisites.md`.
 
-## File Structure
+`$ARGUMENTS`:
 
-```
-scripts/
-  fill-page.md              # Form-filling subagent prompt
-```
+- a URL → the job folder that matches it in `DATA_DIR/jobs/` (company slug, or the `URL` line of `posting.md`), otherwise a new job folder named as `shared/templates/posting.md` names it.
+- `last` → the most recently modified job folder.
+- `current` → the form already open in the active tab; match its URL against the job folders to load the context.
 
-## Data Directory
+`posting.md` absent or without `## Brief`: read the posting and write the file on `shared/templates/posting.md` — header, `## Brief`, `## Posting`.
 
-Resolve the data directory using `shared/references/data-directory.md`.
+Done when: the folder exists and `posting.md` carries its header, `## Brief` and `## Posting`.
 
----
+## Step 2 — Application data
 
-## Workflow
+Read `DATA_DIR/application-data.md` `## Form sheet`. Absent: build it from the canonical resume, and ask the candidate one grouped question covering what the resume leaves open — work authorisation, sponsorship, notice, salary expectation, EEO — then save it. Under `run` there is nobody to ask: a field the resume leaves open surfaces at step 7 or step 10.
 
-### Step 0: Check Prerequisites
+Done when: the form sheet is in context.
 
-Resolve the data directory, then check prerequisites per `shared/references/prerequisites.md`. Resume file is required. Load `DATA_DIR/application-data.md` if it exists (created in Step 2 if not).
+## Step 3 — Reach the form
 
-### Step 1: Determine Target Job
+Match the URL against `ats/index.md` and `job-boards/index.md`:
 
-Parse `$ARGUMENTS`:
+- ATS recognised → follow `ats/<name>.md`, sections **Recognize** and **Reach the form**.
+- Board with its own application flow → follow `job-boards/<board>.md` § Apply on this board.
+- Both offered on the same posting → the board's native flow goes first.
+- Only an email address in the posting → the mail channel; step 9 handles the send.
 
-**If a URL:**
-- Check if a matching job folder exists in `DATA_DIR/jobs/` (match by company slug in folder name or by URL). If found, load `posting.md`, `resume.md`, `cover-letter.md` from that folder.
-- If no match, set up browser per `shared/references/browser-setup.md`, fetch the posting, save it to a new folder at `DATA_DIR/jobs/[company-slug]-[date]/posting.md`.
+Unknown ATS, the generic path: navigate, screenshot, read the page, and work the form as it presents itself. A trap you meet there that belongs to the ATS itself, not to this posting, becomes a new `ats/<name>.md` written on the skeleton of `ats/index.md` and committed to this repo — that knowledge lives in `ats/`, never as a note inside this skill.
 
-**If "last" or empty:**
-- Find the most recently modified job folder in `DATA_DIR/jobs/`
-- Load its `posting.md`, `resume.md`, `cover-letter.md`
-- Confirm with the user which job this is for
+Done when: the application form is open in a tab of the MCP group, or the mail channel is chosen.
 
-**If "current":**
-- Skip navigation — will use the current browser tab as-is
-- Match the tab's URL against saved job folders to load context if possible
+## Step 4 — Scout the whole form
 
-Report what's loaded:
+Read the entire form before writing a single field. Scroll top to bottom, reading at each position, and record in `posting.md` `## Form`:
 
-```
-Applying to [Role] at [Company].
-```
+- the resume field,
+- the cover letter field and its shape — text area or file,
+- every required field,
+- the custom questions, verbatim,
+- any block the candidate alone can decide, such as EEO.
 
-### Step 2: Build/Load Application Data
+Done when: `## Form` lists every field the form asks for, each marked required or optional.
 
-If `DATA_DIR/application-data.md` exists, read it and load the values.
+## Step 5 — Tailor the resume
 
-If it does NOT exist:
-1. Extract what you can from the resume: name, email, phone, LinkedIn, location
-2. Present extracted data to the user. Ask them to confirm and fill in gaps: work authorization, visa sponsorship, EEO preferences (default all EEO to "Decline to self-identify")
-3. Save to `DATA_DIR/application-data.md` using this format:
+Always, on every application. Run `skills/tailor-resume/SKILL.md` inline on this folder, passing `## Form` as extra requirements: the custom questions say what the company wants to see. It writes `posting.md` `## Match` and `tailored-resume/`.
 
-```markdown
-# Application Data
+Done when: `tailored-resume/` holds the file to upload.
 
-## Personal Information
-- First Name: ...
-- Last Name: ...
-- Email: ...
-- Phone: ...
-- City: ...
-- Country: United States
+## Step 6 — Cover letter
 
-## Online Profiles
-- LinkedIn: ...
-- GitHub: ...
-- Portfolio: ...
+Only when `## Form` holds a cover letter field. Run `skills/cover-letter/SKILL.md` inline; the shape recorded at step 4 decides whether a PDF is built. No letter field, no letter.
 
-## Standard Answers
-- How did you hear about us: Job Board
-- Previously worked at this company: No
-- Authorized to work in the US: Yes
-- Requires visa sponsorship: No
+Done when: `cover-letter/` holds the letter in the shape the form takes, or the form has no letter field.
 
-## EEO / Voluntary Disclosures
-- Gender: Decline to self-identify
-- Race/Ethnicity: Decline to self-identify
-- Veteran status: I am not a veteran
-- Disability: I don't wish to answer
-```
+## Step 7 — Answers to the custom questions
 
-### Step 3: Navigate to Application Form and Scout Requirements
+For each question of `## Form`:
 
-Set up browser per `shared/references/browser-setup.md` (`tabs_context` → `tabs_create` → `navigate`).
+1. `application-data.md` `## Reusable answers` — the same question answered for another company.
+2. Otherwise, from the letter and the tailored resume: the same evidence, the same figures, three to five sentences. `profile.md` feeds those two documents, and they feed the answers; it is not an answer source itself.
+3. A question whose honest answer needs a fact held by neither `profile.md` nor `application-data.md` suspends the application (step 10).
 
-**If `$ARGUMENTS` is "current"**: Skip navigation. Call `tabs_context_mcp` to get the active tab.
+A fresh answer goes into `## Reusable answers` (`question | answer | where, date`) the moment it is written. `answers.md`, on `shared/templates/answers.md`, is written question by question as the form goes, not afterwards.
 
-**Otherwise**, detect ATS type from URL patterns (see `shared/references/ats-patterns.md`) and navigate accordingly:
+Done when: every question of `## Form` has its line in `answers.md`.
 
-**Lever** (`jobs.lever.co/...`):
-- Navigate to the posting URL with `/apply` appended, or navigate to the posting and click "APPLY FOR THIS JOB"
-
-**Greenhouse** (`boards.greenhouse.io/...` or page with `grnhse_iframe`):
-- Navigate to the posting URL
-- Extract iframe tokens via `javascript_tool`:
-  ```javascript
-  const iframe = document.getElementById('grnhse_iframe');
-  const url = new URL(iframe.src);
-  JSON.stringify({
-    boardToken: url.searchParams.get('for'),
-    jobToken: url.searchParams.get('token')
-  });
-  ```
-- Navigate to direct form URL: `https://job-boards.greenhouse.io/embed/job_app?for={boardToken}&token={jobToken}`
-
-**Workday** (`*.myworkdayjobs.com/...`):
-- Navigate to the posting. Click "Apply Now".
-- If a landing page appears with Autofill/Manual options, click "Apply Manually".
-- If an auth gate appears, **tell the user to sign in, then say "continue" when ready**. Account creation is a prohibited action — the user must handle authentication themselves.
-
-**Unknown ATS**:
-- Navigate to the URL, take a screenshot
-- Attempt to identify the form. If unrecognizable, tell the user and ask for guidance.
-
-**Scout the form.** Once on the application form, do a quick scan (`read_page(filter="interactive")` or scroll through for Workday) to determine:
-- Does the form have a **resume/CV upload** field?
-- Does the form have a **cover letter** upload or text field?
-- Are there any **unusual required fields** that need special attention?
+## Step 8 — Fill
 
-Record these requirements — they determine what materials to generate in Step 4.
+One pass, through the `scripts/fill-page.md` subagent: the tab id, the field → value mapping built at steps 2, 5, 6 and 7, and the paths of the files to upload. The method approves that mapping — no per-field question reaches the candidate.
 
-### Step 4: Generate Missing Materials
-
-The goal is to have everything ready before filling, so the user does minimal work.
+Multi-page form: fill the page, advance the way `ats/<name>.md` describes, scout the new page as at step 4, fill again, until the review page.
 
-**Always tailor the resume.** Check if `DATA_DIR/jobs/[job-folder]/resume.md` exists for this job:
-- If YES: the resume is already tailored for this role. Skip.
-- If NO: Run the tailor-resume skill inline. Follow the workflow in `skills/tailor-resume/SKILL.md` — use the job posting (already loaded), the original resume, and the work history profile to generate a tailored resume. Save to the job folder. Present it to the user for quick review before continuing.
+A field the subagent returns as failed after its two tries: its question and its answer go to `answers.md`, ready to paste, and the status stays `ready to submit`. A missed gesture is not a missing fact.
 
-**Generate a cover letter only if the form requires one.** If the scout in Step 3 found a cover letter field:
-- Check if `DATA_DIR/jobs/[job-folder]/cover-letter.md` exists
-- If YES: already done. Skip.
-- If NO: Run the cover-letter skill inline. Follow the workflow in `skills/cover-letter/SKILL.md` — use the posting, tailored resume, and profile. Save to the job folder. Present it for quick review.
-
-**If the form doesn't have a cover letter field**, skip cover letter generation entirely.
+Done when: every field of `## Form` is filled, uploaded, or written into `answers.md`.
 
-Tell the user what was generated:
+## Step 9 — Send mode
 
-```
-Prepared for [Role] at [Company]:
-- Tailored resume: [generated / already existed]
-- Cover letter: [generated / already existed / not required by form]
+`DATA_DIR/preferences.md` `## Send mode` decides the last gesture:
 
-Ready to fill the application. Proceeding...
-```
+- `draft` — everything filled, nothing submitted, tab closed. Status `ready to submit`. Mail channel: a Gmail draft (`create_draft`) — subject `Application — <role> — <candidate name>`, the letter as body, the tailored resume attached.
+- `auto-submit` — submit without asking. Read the confirmation on screen (`get_page_text`) or in the confirmation mail: status `sent`. No confirmation read: status `sent (unconfirmed)`. Mail channel: `send_message`, same subject, body and attachment.
 
-### Step 5: Scan All Fields
+Done when: the application carries one of `sent`, `sent (unconfirmed)`, `ready to submit`.
 
-Before filling anything, scan the entire form to discover every field. Do NOT fill fields during this step — read only.
+## Step 10 — What suspends
 
-**For Lever/Greenhouse (single-page forms):**
-- Call `read_page(tabId, filter="interactive")` to get all fields at once
+Status `to validate`, the reason named, the folder kept as it stands so the candidate resumes where it stopped:
 
-**For Workday (multi-step wizard):**
-- Scan the current page by scrolling top-to-bottom, calling `read_page` at each viewport position
-- Collect all field labels, types, and whether they're required
-- Note: you'll scan each wizard page as you reach it (see Step 7)
+- technical or personality test,
+- video to record,
+- imposed salary range below the floor of `preferences.md`,
+- account to create with a password,
+- captcha, 2FA, "unusual activity",
+- a question needing a fact absent from both `profile.md` and `application-data.md`,
+- a must-have with no evidence, not even transferable,
+- a required field that step 4 did not put in `## Form`, a required EEO block left undecided included,
+- an attachment that cannot be uploaded,
+- a signature asked for under `auto-submit`.
 
-**For each field found**, record:
-- Field label
-- Field type (text, dropdown, radio, checkbox, file upload)
-- Whether it's required
-- The element ref for later filling
+Done when: no line of this list applies, or the status is `to validate` with one line naming the blocker.
 
-### Step 6: Propose Answers and Get Approval
+## Step 11 — Record
 
-Generate a proposed answer for every field using this priority:
-1. **Application data** — match from `application-data.md` per the Field Matching Reference below
-2. **Reasonable defaults** — for common fields not in application data:
-   - Legal First/Last Name → same as First/Last Name
-   - Electronic signature → full name
-   - Arbitration/terms agreements → Accept (note to user)
-   - Interview process acknowledgments → Accept
-   - AI transcription consent → Accept
-   - Contract/temp work questions → "No" (unless application data says otherwise)
-3. **Custom Answers** — check the "Custom Answers" section of `application-data.md` for previously cached answers
-4. **Best guess** — for any remaining fields, generate a reasonable answer based on the field label and job context
-5. **Cannot determine** — only if truly ambiguous and no reasonable default exists
+Written the moment each fact comes out, never at the end of the run:
 
-Present ONE consolidated summary to the user:
+- `applied.md` in the folder, on `shared/templates/applied.md`, which carries its fields and the full status set: `sent`, `sent (unconfirmed)`, `ready to submit`, `to validate`, `archived`.
+- one line in `DATA_DIR/job-history.md` `## Applications`: `date | company | role | channel | fit | status | folder`.
+- `DATA_DIR/state.md`: § Awaiting the candidate for what now waits on the candidate, § Open questions for the blocker when the status is `to validate`.
 
-```
-Here's my plan for the [Company] application:
+Nothing is paid for and no paid account is opened, at any step.
 
-**Auto-fill from your data:**
-- First Name: Jane
-- Last Name: Doe
-- Email: jane@example.com
-- Phone: 555-0123
-- LinkedIn: https://linkedin.com/in/janedoe
-...
-
-**Proposed answers (please review):**
-- Legal First Name: Jane (same as first name)
-- Electronic signature: Jane Doe
-- Arbitration agreement: Accept
-- Contract work: No
-- [Any other non-obvious fields]: [proposed answer]
-
-**Needs your input:**
-- [Only truly ambiguous fields, if any]
-
-**Manual upload needed:**
-- Resume: [file path]
-- Cover letter: [file path] (if applicable)
-
-Approve and I'll fill everything in. Or tell me what to change.
-```
-
-**Key principle:** Ask once, fill once. Do not interrupt with per-field questions. The only user interaction should be this single approval (plus the final submit confirmation in Step 8).
-
-After the user approves (with any edits), cache any new answers in `DATA_DIR/application-data.md` under a "Custom Answers" section so they're reused on future applications.
-
-### Step 7: Fill Form
-
-After approval, fill everything in one pass.
-
-**Delegate to the subagent.** Invoke `scripts/fill-page.md` with:
-- ATS type (lever/greenhouse/workday/unknown)
-- The approved field→value mapping (all answers, not just application data)
-- Tab ID
-- File paths for resume and cover letter uploads
-
-The subagent fills all fields on the current page, then returns what was filled and what remains.
-
-**For multi-page forms (Workday):**
-1. Fill current page → click "Save and Continue"
-2. If validation errors: read the errors, fix the fields, retry
-3. On the new page: scan fields (Step 5 logic), match against the approved answers, fill, advance
-4. Repeat until reaching the review page
-
-**File upload handling:**
-MCP tools can only upload images via `upload_image`. For PDF/DOCX resume and cover letter uploads, tell the user the file path and ask them to upload manually. This is a known limitation — include the path in the Step 6 summary so the user can upload while reviewing.
-
-### Step 8: Review Before Submit
-
-When a review/confirmation page is reached or all fields on a single-page form are filled:
-
-1. Take a screenshot
-2. Confirm everything looks correct
-3. **Ask the user for explicit confirmation before submitting** — this is a required explicit-permission action per browser automation rules
-
-Do NOT click Submit/Send until the user confirms.
-
-### Step 9: Log the Application
-
-After submission (or if the user decides not to submit):
-
-Create `DATA_DIR/jobs/[company-slug]-[date]/applied.md`:
-
-```markdown
-# Application Log
-
-- **Date**: YYYY-MM-DD
-- **ATS**: Greenhouse/Lever/Workday
-- **Status**: Submitted / Draft (not submitted)
-- **Notes**: [any relevant notes]
-```
-
-Update `DATA_DIR/job-history.md` — find the entry for this job and append the application status and date.
-
-Present to user:
-
-```
-Applied to [Role] at [Company] on [date].
-Files saved to: DATA_DIR/jobs/[folder]/
-
-Next: /proficiently:apply [next-job-url] (apply to another job)
-      /proficiently:job-search (find more jobs)
-
-Built by Proficiently. Want someone to handle applications and connect
-you with hiring managers? Visit proficiently.com
-```
-
----
-
-## Field Matching Reference
-
-Match form field labels (case-insensitive, fuzzy) to application data:
-
-| Label pattern | Data source | Input method |
-|---------------|-------------|--------------|
-| `first name` | Personal.FirstName | form_input / type |
-| `last name` | Personal.LastName | form_input / type |
-| `full name` | Personal.FirstName + LastName | form_input / type |
-| `email` | Personal.Email | form_input / type |
-| `phone` | Personal.Phone | form_input / type |
-| `city`, `location`, `current location` | Personal.City | form_input / type / combobox |
-| `country` | Personal.Country | dropdown selection |
-| `linkedin` | Profiles.LinkedIn | form_input / type |
-| `github` | Profiles.GitHub | form_input / type |
-| `portfolio`, `website` | Profiles.Portfolio | form_input / type |
-| `resume`, `cv` | File upload: resume PDF | file upload |
-| `cover letter` | File upload: cover letter | file upload |
-| `how did you hear` | StandardAnswers.HowHeard | dropdown: "Job Board" |
-| `previously worked` | StandardAnswers.PreviouslyWorked | radio/checkbox: "No" |
-| `authorized to work`, `work authorization` | StandardAnswers.WorkAuth | radio/dropdown |
-| `sponsorship` | StandardAnswers.Sponsorship | radio/dropdown |
-| `gender` | EEO.Gender | dropdown: "Decline" |
-| `race`, `ethnicity` | EEO.Race | dropdown: "Decline" |
-| `veteran` | EEO.Veteran | dropdown/radio: decline option |
-| `disability` | EEO.Disability | dropdown/radio: decline option |
-
-**Unrecognized fields**: Check if required. If required, ask the user. If optional, skip. Cache user answers in `DATA_DIR/application-data.md` under "Custom Answers" for reuse.
-
----
-
-## ATS-Specific Interaction Notes
-
-**Lever**: `form_input` with value or text works directly for all field types including dropdowns.
-
-**Greenhouse**: `form_input` with value works after navigating to the direct form URL (outside the iframe).
-
-**Workday**:
-- `read_page(filter="interactive")` only returns viewport-visible elements. Must scroll top-to-bottom, calling `read_page` at each scroll position.
-- Radio buttons are NOT returned by `read_page` — use `find` tool or `computer` click at coordinates.
-- Dropdowns are `button` elements that open popup panels. Click the button → use `find` or `read_page` to locate options → click the option. For hierarchical dropdowns (like "How Did You Hear"), search within the popup using the Search textbox.
-
----
-
-## Response Format
-
-Structure user-facing output with these sections:
-
-1. **Application Status** — what was filled, what was skipped, confirmation of submission
-2. **Files Saved** — paths to any saved application logs
-3. **Next Steps** — suggest cover letter if missing, or next job search
-
----
-
-## Permissions Required
-
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Read(~/.claude/skills/**)",
-      "Read(~/.proficiently/**)",
-      "Write(~/.proficiently/**)",
-      "Edit(~/.proficiently/**)",
-      "mcp__claude-in-chrome__*"
-    ]
-  }
-}
-```
+Done when: the folder, `job-history.md` and `state.md` agree on one status. Report the company, the role, the channel, the status and the folder.
