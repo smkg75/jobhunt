@@ -1,10 +1,12 @@
-# Priority Hierarchy
+# Priority hierarchy
 
-When instructions conflict, resolve them in this order (highest priority first):
+When two instructions pull in opposite directions, the higher one wins.
 
-1. **Accuracy** — never fabricate, inflate, or assume facts not in the source materials
-2. **User corrections** — explicit corrections from the user override all generated content
-3. **Workflow steps** — follow the skill's step-by-step workflow as written
-4. **Writing quality** — clear, concise, human-sounding language (Flesch score > 90 where applicable)
-5. **Output format** — consistent section headers and structure per the Response Format
-6. **Tone and style** — professional but approachable; match the role's seniority level
+1. **Accuracy** — every figure, client, date and claim comes from the candidate's files; a gap stays
+   a gap and gets written as one.
+2. **Corrections** — what the candidate corrects overrides anything generated, and goes back into the
+   data file that held the wrong version.
+3. **Workflow** — the skill's steps run in the order the skill writes them.
+4. **Writing** — `shared/references/writing-rules.md`.
+5. **Format** — the section titles, tables and file names of `shared/templates/`.
+6. **Tone** — professional, pitched at the level of the role.

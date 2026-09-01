@@ -1,21 +1,24 @@
-# Prerequisites by Skill
+# Prerequisites
 
-Check that required data files exist before proceeding. If any required file is missing, show the failure message and stop.
+Check the files a skill needs before its first step. A required file missing outside `setup` stops the
+skill on: "`<file>` is missing. Run `/jobhunt:setup` first."
 
-## Required Files
+| File | setup | job-search | tailor-resume | cover-letter | apply | network-scan | run |
+|---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+| `DATA_DIR/index.md` | creates | — | required | — | required | — | required |
+| `DATA_DIR/state.md` | creates | — | — | — | — | — | required |
+| `DATA_DIR/profile.md` | creates | required | required | required | required | required | required |
+| `DATA_DIR/preferences.md` | creates | required | — | — | required | required | required |
+| `DATA_DIR/application-data.md` | creates | — | — | — | created if missing | — | required |
+| `DATA_DIR/job-history.md` | creates | required | — | — | required | required | required |
+| `DATA_DIR/companies.md` | creates | required | — | — | — | required | required |
+| `DATA_DIR/resume/` | creates | — | required | — | required | — | required |
+| `DATA_DIR/linkedin-contacts.csv` | offers | optional | — | — | — | required | optional |
 
-| File | setup | job-search | tailor-resume | cover-letter | network-scan | apply |
-|------|:-----:|:----------:|:------------:|:------------:|:------------:|:-----:|
-| `DATA_DIR/resume/*` | — | Required | Required | Required | Required | Required |
-| `DATA_DIR/preferences.md` | — | Required | — | — | Required | — |
-| `DATA_DIR/profile.md` | — | — | Recommended | Recommended | — | — |
-| `DATA_DIR/linkedin-contacts.csv` | — | — | — | — | Required | — |
-| `DATA_DIR/application-data.md` | — | — | — | — | — | Created if missing |
+Two files bend the rule:
 
-## Failure Messages
-
-- **Resume missing**: "Run `/proficiently:setup` first to upload your resume."
-- **Preferences missing**: "Run `/proficiently:setup` first to configure your resume and preferences."
-- **LinkedIn contacts missing**: "No LinkedIn contacts found. Run `/proficiently:setup` and import your contacts first."
-- **Profile missing (tailor-resume)**: Warn that the resume will be based only on resume text and may require more corrections. Recommend running `/proficiently:setup interview` first. Allow the user to proceed if they choose.
-- **Profile missing (cover-letter)**: Warn that the cover letter will be based only on the resume. Recommend running `/proficiently:setup interview` first. Proceed anyway.
+- **`profile.md` missing** in `tailor-resume` or `cover-letter` — say the text will rest on the resume
+  alone and will take more corrections, recommend `/jobhunt:setup interview`, and continue when the
+  candidate asks for it.
+- **`linkedin-contacts.csv` missing** in `network-scan` — stop on: "No LinkedIn contacts. Run
+  `/jobhunt:setup` and import them first."

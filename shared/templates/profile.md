@@ -1,82 +1,48 @@
-# Work History Profile
+# Profile
 
-Comprehensive work history compiled from resume + interview. This is the raw material for tailoring resumes.
+## Overview
+_Who the candidate is in a few lines: the thread across the roles, the level aimed at._
 
-*Last updated: [DATE]*
+## Role: <title> at <company>
+_One block per role, most recent first._
 
----
+### Company context
+_What the company does, its stage, its size, its market._
 
-## Candidate Overview
-
-**Name**: [Name]
-**Target level**: [VP / Director / Senior Manager / etc.]
-**Core expertise**: [2-3 sentence summary of what this person does best]
-**Career throughline**: [The narrative arc - what connects all their roles?]
-
----
-
-## Role: [Title] at [Company]
-
-**Dates**: [Start - End]
-**Company context**: [What the company does, stage, size, funding, market]
-**Reporting to**: [Title of manager]
-**Team**: [Direct reports, total org size]
+### Dates
+_Start and end, month and year._
 
 ### Mandate
-[What were they hired to do? What was the state of things when they arrived?]
+_What the role was hired to do._
 
-### Key Accomplishments
+### On arrival
+_The state of things on the first day._
 
-1. **[Accomplishment headline]**
-   - Situation: [Context and problem]
-   - Action: [What they specifically did]
-   - Result: [Quantified outcome]
-   - Skills demonstrated: [Relevant skills]
+### Achievements
+_One line per achievement, each with its figure and the period it covers._
 
-2. **[Accomplishment headline]**
-   - Situation: [Context and problem]
-   - Action: [What they specifically did]
-   - Result: [Quantified outcome]
-   - Skills demonstrated: [Relevant skills]
+### What failed
+_What was attempted and did not work, and what came of it._
 
-### Technical & Strategic Detail
-- Tools/platforms: [What they used]
-- Methodologies: [Frameworks, approaches]
-- Key decisions: [Strategic choices they made and why]
+### Why it ended
+_The reason the role ended, as a dated fact._
 
-### Leadership & Team Building
-- [How they built, managed, and grew their team]
-- [Cross-functional collaboration details]
-- [Key hires and their impact]
+### Tools
+_Tools, platforms and methods actually used in this role._
 
-### Challenges
-- [What was hard, what didn't work, how they adapted]
+## Cross-role patterns
+_What comes back from one role to the next: the recurring problem, the way of working, the setting
+that brings out the best work._
 
-### Why They Left
-[Context for the transition]
+## Metrics bank
+_Every figure that can be quoted, with the source that proves it._
 
----
+| metric | context | role | source |
+|---|---|---|---|
+| | | | |
 
-*Repeat for each role*
+## Letter rules
+_How this candidate wants to be told: what to open on, what to leave out, the register._
 
----
-
-## Cross-Role Patterns
-
-**Recurring themes**: [What patterns appear across roles?]
-**Superpower**: [What does this person do better than most?]
-**Growth trajectory**: [How has their career evolved?]
-**Best-fit environments**: [Where do they thrive? What conditions bring out their best work?]
-
-## Notable Quotes
-
-Capture the candidate's own words for compelling resume bullets:
-- "[Direct quote about an accomplishment]" (re: [Company/Role])
-- "[Direct quote about approach]" (re: [Company/Role])
-
-## Metrics Bank
-
-Quick reference for all quantified achievements:
-| Metric | Value | Context | Role |
-|--------|-------|---------|------|
-| [e.g., Revenue growth] | [e.g., $50M → $200M] | [e.g., 3 years] | [Company] |
+## Open gaps
+_Facts still missing, one line each, marked `?` until answered._

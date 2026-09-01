@@ -1,28 +1,20 @@
-# Browser Automation Setup
+# Browser setup
 
-Standard sequence for skills that use Claude in Chrome MCP tools to fetch web pages.
+Sequence for every skill that drives Chrome through the Claude in Chrome tools:
 
-## Tab Setup
+1. `tabs_context_mcp` — read the browser state. No tab, or an error: ask the candidate to confirm
+   Chrome is open with the extension active.
+2. `tabs_create_mcp` — open a tab inside the MCP group.
+3. `navigate` — go to the URL.
+4. Extract.
 
-```
-1. tabs_context_mcp → get browser state
-2. tabs_create_mcp → create a new tab
-3. navigate → target URL
-4. get_page_text → extract page content
-```
+## Context safety
 
-## Context Window Safety
+`get_page_text` returns the whole page. On a listing, a search result or a dashboard it fills the
+context window and the session becomes unrecoverable. Reserve it for one posting, one confirmation
+screen, one short page.
 
-**Avoid `get_page_text` on large or dynamic pages** (job boards, search results, listing pages, dashboards). It returns the entire page and can blow out the context window, making the conversation unrecoverable.
+Read every other page with `javascript_tool` and a selector, or with `read_page` for element refs.
+The extraction recipe for a board listing is in `job-boards/index.md`.
 
-Instead, use targeted extraction:
-- `javascript_tool` with a selector to extract only the content you need
-- `read_page` to get structured element refs
-- `get_page_text` is safe only for simple pages with a single article/posting
-
-## Error Handling
-
-- If `tabs_context_mcp` returns no tabs or an error, ask the user to confirm Chrome is open with the Claude in Chrome extension active.
-- If `navigate` fails or the page doesn't load, ask the user to paste the content directly.
-- If `get_page_text` returns empty or unusable content, try `read_page` as a fallback, then ask the user to paste if that also fails.
-- Do not retry a failing page more than once. Move on and ask the user for the content.
+A page that fails twice is a page to leave: move on, and ask the candidate for its content.

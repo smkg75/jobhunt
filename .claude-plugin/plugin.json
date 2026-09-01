@@ -1,13 +1,12 @@
 {
-  "name": "proficiently",
-  "description": "AI-powered job search, resume tailoring, and cover letter writing",
-  "version": "1.1.0",
+  "name": "jobhunt",
+  "description": "Searches job boards, scores postings, tailors the resume and cover letter, and fills the application form",
+  "version": "0.1.0",
   "author": {
-    "name": "Proficiently",
-    "url": "https://proficiently.com"
+    "name": "smkg75",
+    "url": "https://github.com/smkg75"
   },
-  "homepage": "https://proficiently.com",
-  "repository": "https://github.com/proficientlyjobs/proficiently-claude-skills",
+  "repository": "https://github.com/smkg75/jobhunt",
   "license": "MIT",
-  "keywords": ["job-search", "resume", "cover-letter", "career", "apply"]
+  "keywords": ["job-search", "resume", "cover-letter", "ats", "apply", "career"]
 }

@@ -1,33 +1,22 @@
-# Data Directory Resolution
+# Data directory
 
-All user data lives in a `.proficiently/` folder. Follow these steps to find it:
+`DATA_DIR` is the path that follows the marker `JobHunt data:` in `~/.claude/CLAUDE.md`. Backticks
+around the path are accepted, and `~` expands to the home directory.
 
-## Resolution Algorithm
+When the marker is absent:
 
-1. Check the current working directory for `.proficiently/` — use it if found
-2. Check `~/.proficiently/` — use it if found
-3. If neither exists:
-   - **setup skill**: this is a fresh setup — create it in Step 1
-   - **all other skills**: tell the user to run `/proficiently:setup` first, then stop
+- `setup` — no directory exists yet: create one, and write the marker line.
+- every other skill — stop on "Run /jobhunt:setup first".
 
-## Ephemeral Session Warning
+`setup` offers `~/jobhunt/` as the default location and accepts any path the candidate names.
 
-If no folder is selected (i.e. the working directory looks like an ephemeral session path such as `/sessions/...`), stop and tell the user:
+Its layout is in `README.md`, and every skill instruction writes `DATA_DIR/` for whichever directory
+the marker points at.
 
-> "Before we start, you need to select a folder so your data persists between sessions. Click 'Work in a folder' and select your home directory, then try again."
+## Ephemeral sessions
 
-Do NOT proceed without a persistent folder.
+A working directory under an ephemeral session path (`/sessions/...`) loses its files when the session
+ends. Stop there and tell the candidate:
 
-## DATA_DIR Tree
-
-All paths in skill instructions use `DATA_DIR` to mean whichever `.proficiently/` directory was found or created.
-
-```
-DATA_DIR/
-  resume/              # Your resume PDF/DOCX
-  preferences.md       # Job matching rules
-  profile.md           # Work history from interview
-  linkedin-contacts.csv # LinkedIn connections (optional)
-  jobs/                # Per-job application folders
-  job-history.md       # Running log from job-search
-```
+> "Select a folder first so your data survives the session. Click 'Work in a folder', pick your home
+> directory, then run this again."

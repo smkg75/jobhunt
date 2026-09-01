@@ -1,148 +1,91 @@
-# Proficiently
+# jobhunt
 
-A Claude Code plugin for AI-powered job searching, resume tailoring, and cover letter writing. Built by [Proficiently](https://proficiently.com).
-
-> **Want someone to handle your entire job search?** Proficiently finds you jobs, tailors your resume and cover letters, applies on your behalf, and gets you in touch with hiring managers. Visit [proficiently.com](https://proficiently.com) to get started.
-
-![proficiently-demo](https://github.com/user-attachments/assets/2f39a093-bf7b-4c43-a7b5-c3e6251440e4)
+A Claude Code plugin that carries a job search from the first query to the submitted form. It reads
+the candidate's own files, searches the boards, scores each posting, tailors the resume and the cover
+letter to that posting, fills the application form in Chrome through the Claude in Chrome extension,
+and logs what went out. The plugin holds the method; every fact about the candidate lives in a data
+directory outside it.
 
 ## Skills
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| [Setup](./skills/setup/) | `/proficiently:setup` | One-time onboarding: resume, preferences, LinkedIn contacts, and work history interview |
-| [Job Search](./skills/job-search/) | `/proficiently:job-search` | Automated job search with smart filtering and network matching |
-| [Tailor Resume](./skills/tailor-resume/) | `/proficiently:tailor-resume` | Create tailored resumes for specific job postings |
-| [Cover Letter](./skills/cover-letter/) | `/proficiently:cover-letter` | Write natural, persuasive cover letters |
-| [Network Scan](./skills/network-scan/) | `/proficiently:network-scan` | Scan your contacts' companies for matching job openings |
-| [Apply](./skills/apply/) | `/proficiently:apply` | Fill out job applications on Greenhouse, Lever, and Workday |
-| [Telegram Loop](./skills/jobsearch-telegram/) | `/proficiently:jobsearch-telegram` | Headless job search assistant via Telegram — apply, search, and check status by chat |
+| Command | Argument | Produces |
+|---|---|---|
+| `/jobhunt:setup` | `interview` to jump straight to the questions | the data directory, its files filled in from `shared/templates/`, the resume in `resume/` |
+| `/jobhunt:job-search` | keywords, optional | a pass table in `job-history.md` § Runs, and `posting.md` under `jobs/` for every High |
+| `/jobhunt:tailor-resume` | a posting URL, `last` or `current` | `posting.md` § Match and the built resume in `tailored-resume/` |
+| `/jobhunt:cover-letter` | a posting URL, `last` or `current` | `cover-letter/cover-letter.md`, plus a PDF when the form wants a file |
+| `/jobhunt:apply` | a posting URL, `last` or `current` | the form filled, `answers.md`, `applied.md`, a line in `job-history.md` § Applications |
+| `/jobhunt:network-scan` | a contact count, or `all` (default 25) | openings at the companies of the candidate's LinkedIn contacts, logged in `job-history.md` § Runs |
+| `/jobhunt:run` | keywords, optional | a search pass, then an application for every High, and a four-block report in `state.md` § Last run |
 
-## How They Work Together
-
-1. **`/proficiently:setup`** uploads your resume, configures preferences, imports LinkedIn contacts, and conducts a work history interview (one-time)
-2. **`/proficiently:job-search`** finds jobs that match your preferences and resume, flags companies where you have connections
-3. **`/proficiently:tailor-resume`** rewrites your resume for a specific job posting, saves the job posting and tailored resume together
-4. **`/proficiently:cover-letter last`** writes a cover letter using the most recent job's posting and tailored resume
-5. **`/proficiently:apply last`** fills out the application form on Greenhouse, Lever, or Workday using your tailored resume and cover letter
-6. **`/proficiently:network-scan`** scans your LinkedIn contacts' companies for matching openings (leverages your network for warm intros)
-7. **`/loop 1m /proficiently:jobsearch-telegram`** runs the Telegram bot in the background — send a job URL or "search [keywords]" from your phone to trigger any of the above automatically
-
-All skills share a `~/.proficiently/` directory for personal files. Each job application gets its own folder containing the posting, tailored resume, and cover letter.
-
-## Installation
-
-### Option A: Claude Cowork (desktop app)
-
-1. Download [Claude Cowork](https://claude.com/product/cowork) if you haven't already
-2. Download the plugin as a zip from GitHub: [Download ZIP](https://github.com/proficientlyjobs/proficiently-claude-skills/archive/refs/heads/main.zip)
-3. In Cowork, go to **Plugins** (left sidebar) and click the **+** button
-4. Select **Upload plugin**
-5. Drag and drop the downloaded zip file, then click **Upload**
-6. Run `/proficiently:setup` to get started
-
-### Option B: Claude Code CLI
-
-First, add the repository as a marketplace:
+## Install
 
 ```bash
-claude plugin marketplace add https://github.com/proficientlyjobs/proficiently-claude-skills.git
+# from a local checkout
+claude plugin marketplace add /path/to/jobhunt
+# or from the repository
+claude plugin marketplace add https://github.com/smkg75/jobhunt.git
+
+claude plugin install jobhunt@jobhunt
 ```
 
-Then install the plugin:
+Then run `/jobhunt:setup`. It creates the data directory, writes its path into `~/.claude/CLAUDE.md`,
+and fills the first files. Every other skill reads that path
+(`shared/references/data-directory.md`).
 
-```bash
-claude plugin install proficiently@proficiently
+Browser work needs Chrome running with the Claude in Chrome extension active.
+
+## The data directory
+
+```
+DATA_DIR/
+├── index.md                    map of this folder, resume build command
+├── state.md                    last run, what waits on the candidate, open questions
+├── profile.md                  roles, evidence, metrics bank, letter rules, open gaps
+├── preferences.md              what to look for, what to skip, how far to go
+├── application-data.md         form sheet, answers already written
+├── job-history.md              applications, search runs, earlier rejections
+├── companies.md                companies followed, their ATS and careers URL
+├── linkedin-contacts.csv       LinkedIn connections export (optional)
+├── resume/                     canonical resumes, one per language, flat
+│   ├── <resume>.pdf
+│   ├── <resume>.<ext>            the source, when there is one
+│   └── images/
+└── jobs/
+    └── <company>-<date>/       one folder per application
+        ├── posting.md          header, Brief, Posting, Match, Form
+        ├── tailored-resume/    the chosen source and its built output
+        ├── cover-letter/       cover-letter.md, plus .tex and .pdf when a file is wanted
+        ├── answers.md          question, answer, source
+        └── applied.md          date, channel, send mode, status, replies
 ```
 
-Then run setup:
+## Boards and ATS covered
 
-```
-/proficiently:setup
-```
+| Board | File |
+|---|---|
+| Indeed | `job-boards/indeed.md` |
+| Hiring.cafe | `job-boards/hiring-cafe.md` |
+| Welcome to the Jungle | `job-boards/wttj.md` |
+| LinkedIn | `job-boards/linkedin.md` |
 
-### After installing
+| ATS | File |
+|---|---|
+| Greenhouse | `ats/greenhouse.md` |
+| Lever | `ats/lever.md` |
+| Workday | `ats/workday.md` |
+| Teamtailor | `ats/teamtailor.md` |
+| Ashby | `ats/ashby.md` |
+| Workable | `ats/workable.md` |
 
-Setup will create `~/.proficiently/`, prompt you for your resume, configure your job preferences, optionally import your LinkedIn contacts, and conduct a work history interview.
+## Adding a board or an ATS
 
-You can also add your resume manually first:
+Write one file on the skeleton its index defines, then add its row there — `job-boards/index.md`
+§ Adding a board, `ats/index.md` § Adding an ATS. The skills read the index and pick the new file up.
 
-```bash
-mkdir -p ~/.proficiently/resume
-cp /path/to/your/resume.pdf ~/.proficiently/resume/
-```
+## Credit
 
-## Prerequisites
-
-- [Claude Cowork](https://claude.com/product/cowork) desktop app **or** [Claude Code CLI](https://claude.ai/code)
-- [Claude in Chrome](https://chromewebstore.google.com/detail/claude-in-chrome) extension (for browser automation)
-- Chrome browser running with the extension active
-
-## File Structure
-
-**Plugin (installed via marketplace):**
-```
-proficiently-claude-skills/
-├── .claude-plugin/
-│   └── plugin.json                     # Plugin manifest
-├── shared/
-│   ├── templates/
-│   │   └── profile.md                  # Work history profile template
-│   └── references/
-│       ├── fit-scoring.md              # Canonical fit scoring criteria
-│       ├── data-directory.md           # Data directory resolution algorithm
-│       ├── prerequisites.md            # Prerequisites checking by skill
-│       ├── browser-setup.md            # Browser automation setup sequence
-│       ├── ats-patterns.md            # ATS navigation patterns (Greenhouse, Lever, Workday)
-│       └── priority-hierarchy.md       # Instruction priority hierarchy
-├── skills/
-│   ├── setup/
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   ├── job-search/
-│   │   ├── SKILL.md
-│   │   ├── assets/templates/
-│   │   └── scripts/
-│   ├── tailor-resume/
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   ├── cover-letter/
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   ├── network-scan/
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   ├── apply/
-│   │   ├── SKILL.md
-│   │   └── scripts/
-│   └── jobsearch-telegram/
-│       └── SKILL.md
-└── README.md
-```
-
-**User data (created by `/proficiently:setup`, persists across plugin updates):**
-```
-~/.proficiently/
-├── resume/                             # Your resume PDF/DOCX
-├── profile.md                          # Work history from interview
-├── preferences.md                      # Job matching rules
-├── linkedin-contacts.csv               # LinkedIn connections (optional)
-├── job-history.md                      # Running log from job-search
-├── company-careers.json                # Cached careers page URLs
-├── network-scan-history.md             # Running log from network-scan
-├── application-data.md                # Reusable form field answers
-└── jobs/                               # One folder per application
-    ├── google-lead-gpm-2026-02-11/
-    │   ├── posting.md                  # Saved job description
-    │   ├── resume.md                   # Tailored resume
-    │   ├── cover-letter.md             # Cover letter
-    │   └── applied.md                  # Application log (date, ATS, status)
-    └── ...
-```
-
-## Built by Proficiently
-
-This plugin is free and open source. If you'd rather have someone handle the whole process for you — finding jobs, tailoring resumes, writing cover letters, submitting applications, and connecting you with hiring managers — visit [proficiently.com](https://proficiently.com).
+Forked from Proficiently's Claude skills plugin (MIT).
 
 ## License
 
