@@ -1,173 +1,115 @@
 ---
 name: job-search
-description: Search for jobs matching my resume and preferences
-argument-hint: "keyword to search"
+description: Run one search pass over the tracked companies and the active job boards, and rank what it finds by fit.
+argument-hint: "optional search keywords"
+disable-model-invocation: true
 ---
 
-# Job Search Skill
+# Job search
 
-> **Priority hierarchy**: See `shared/references/priority-hierarchy.md` for conflict resolution.
+One pass: tracked companies first, then the boards, every posting opened, every posting a verdict.
 
-Automated daily job search using browser automation.
+Instructions that conflict resolve through `shared/references/priority-hierarchy.md`.
 
-## Quick Start
+## Step 0 — Load the data directory
 
-- `/proficiently:job-search` - Run daily search with default terms from matching rules
-- `/proficiently:job-search AI infrastructure` - Search with specific keywords
+Resolve `DATA_DIR` per `shared/references/data-directory.md`, then check prerequisites per `shared/references/prerequisites.md`.
 
-## File Structure
+Read:
 
-```
-scripts/
-  evaluate-jobs.md     # Subagent for parallel job evaluation
-assets/
-  templates/           # Format templates (committed)
-```
+- `DATA_DIR/preferences.md` — `Target roles`, `Location`, `Query rules`, `Sources & accounts`, and the lists the fit rules read
+- `DATA_DIR/profile.md`
+- `DATA_DIR/job-history.md` — `Runs` for the previous pass's queries; the fit rules read `Applications` and `Rejected before <YYYY-MM>`
+- `DATA_DIR/companies.md`
+- `DATA_DIR/linkedin-contacts.csv` when it exists
 
-## Data Directory
+## Step 1 — Re-read the tracked companies
 
-Resolve the data directory using `shared/references/data-directory.md`.
+Tracked companies come before any board.
 
----
+Every row of `companies.md` whose `last visit` is older than seven days: read its openings through `ats/<name>.md` § Read a company's openings. A row with a blank `ATS` or `slug` is read from its `careers URL`, which is the authority — recognize the platform against `ats/index.md` and fill both columns in passing.
 
-## Workflow
+Each opening joins the raw list with the company as its source. Redate `last visit` to today and refresh `last role seen` on every row you read, whether or not it was hiring.
 
-### Step 0: Check Prerequisites
+Done when every row older than seven days is read and redated.
 
-Resolve the data directory, then check prerequisites per `shared/references/prerequisites.md`. Resume and preferences are both required.
+## Step 2 — Work the boards
 
-### Step 1: Load Context
+Read `job-boards/index.md` and take the active boards in the order it gives. Each board's own file carries its access, its query syntax and its list extraction; follow it. A board reached through the browser opens per `shared/references/browser-setup.md`.
 
-Read these files:
-- `DATA_DIR/resume/*` (candidate profile)
-- `DATA_DIR/preferences.md` (preferences)
-- `DATA_DIR/job-history.md` (to avoid duplicates)
-- `DATA_DIR/linkedin-contacts.csv` (if it exists — for network matching)
+Queries are each `Target roles` entry × `Location`, phrased differently from the queries recorded under the previous `## YYYY-MM-DD — run` heading in `job-history.md` § Runs, and bounded by `preferences.md` § Query rules. `$ARGUMENTS`, when the candidate gives one, replaces the role list for this pass.
 
-Extract search terms from:
-1. `$ARGUMENTS` if provided
-2. Target roles from preferences
+A raw posting is: company, role, URL, posted date, source.
 
-### Step 2: Browser Search
+A board that fails — login lost, captcha, tool down — is named in the "what broke" block, and the pass continues on the next one.
 
-Use Claude in Chrome MCP tools per `shared/references/browser-setup.md`, navigating to https://hiring.cafe. For each search term, enter the query and apply relevant filters (date posted, location, etc.).
+Done when: every active board of `job-boards/index.md` has been queried on every `Target roles` × `Location` pair, or named in the "what broke" block.
 
-**Extracting results — IMPORTANT:** Do NOT use `get_page_text` on hiring.cafe or any large job listing page. It returns the entire page content and will blow out the context window.
+## Step 3 — Deduplicate
 
-Instead, extract job listings using `javascript_tool` to pull only structured data:
+Same company plus same role is one line. Keep the line from the earliest source: the tracked companies before every board, then the boards in the order of `job-boards/index.md`.
 
-```javascript
-// Extract visible job listing data from the page
-Array.from(document.querySelectorAll('[class*="job"], [class*="listing"], [class*="card"], tr, [role="listitem"]'))
-  .slice(0, 50)
-  .map(el => el.innerText.trim())
-  .filter(t => t.length > 20 && t.length < 500)
-  .join('\n---\n')
-```
+Done when: one line per company-plus-role remains.
 
-If that selector doesn't match, take a screenshot to understand the page structure, then write a targeted JS selector for the specific site. The goal is to extract just the listing rows (title, company, location, salary) — never the full page.
+## Step 4 — Open every posting
 
-As a fallback, use `read_page` (NOT `get_page_text`) and scan for listing elements.
+Qualification reads the full posting, never a list row. Open each line through its board file's § Read a posting, or through the ATS file for a company opening.
 
-**Note:** Hiring.cafe is just our search tool. Don't share hiring.cafe links with the user — you'll resolve direct employer URLs for the top matches in Step 5.
+Past twenty postings on a board whose access is MCP or API, dispatch them in batches of ten to sub-agents following `scripts/evaluate-jobs.md`, each tooled with that board's posting tool alone. They return facts; the verdict is rendered here. A batch that comes back broken is relaunched once, then its postings are opened one by one in the pass.
 
-### Step 3: Evaluate Jobs
+Done when every line of the raw list carries the facts of its full posting.
 
-Score each job against the candidate's resume and preferences using the criteria in `shared/references/fit-scoring.md`.
+## Step 5 — Rank
 
-### Step 4: Save History
+Score each posting with `shared/references/fit-scoring.md`. One verdict, one line of reason, dated.
 
-Append ALL jobs to `DATA_DIR/job-history.md`:
+Done when: every line carries a verdict and its dated reason.
+
+## Step 6 — Cross the network
+
+For every `High` and `Medium`, look the company up in the `Company` column of `DATA_DIR/linkedin-contacts.csv`, matching loosely ("Acme" matches "Acme Corp"). A hit writes the contact's name and title into the `contact` column of `companies.md` and into the report.
+
+`linkedin-contacts.csv` missing: the line `LinkedIn export to drop` goes to the "what broke" block and the pass continues.
+
+Done when: every High and Medium has been looked up in the CSV, or the missing-export line is in the block.
+
+## Step 7 — Open a folder for each High
+
+Each `High` gets its folder and its `posting.md` on `shared/templates/posting.md`, which names both: header + `## Brief` + `## Posting` here, `## Match` to `tailor-resume`, `## Form` to `apply`.
+
+Done when: every High has its folder with `posting.md` header, `## Brief` and `## Posting`.
+
+## Step 8 — Record the pass
+
+Append to `DATA_DIR/job-history.md` § Runs:
 
 ```markdown
-## [DATE] - Search: "[terms]"
+## YYYY-MM-DD — run
 
-| Job Title | Company | Location | Salary | Fit | Notes |
-|-----------|---------|----------|--------|-----|-------|
-| ... | ... | ... | ... | ... | ... |
+Source: job-search
+Queries: <one line per query>
+
+| title | company | location | posted | salary | link | fit | notes |
 ```
 
-### Step 5: Resolve Employer URLs & Save Top Postings
+Every posting seen takes a row, `Skip` included, its reason in `notes`.
 
-For each **High-fit** job:
-1. Click through the hiring.cafe listing to reach the actual employer careers page
-2. Capture the direct employer URL for the job posting
-3. Extract the job description using `javascript_tool` to pull the posting content (e.g. `document.querySelector('[class*="description"], [class*="content"], article, main')?.innerText`). Do NOT use `get_page_text` — employer pages often have huge footers, navs, and related listings that bloat the output and can blow out the context window.
-4. Save to `DATA_DIR/jobs/[company-slug]-[date]/posting.md` with the employer URL at the top
+Done when: the run block holds one row per posting seen, Skips included.
 
-For **Medium-fit** jobs, try to resolve the employer URL but don't save the full posting.
+## Step 9 — Report
 
-If you can't resolve the direct link for a job, note the company name so the user can find it themselves. Never show hiring.cafe URLs to the user.
+Return, in this order:
 
-### Step 6: Present Results
+1. **High and Medium** — company, role, fit, location, posted date, compensation, link, network contact when found, and the folder for each High
+2. **Notable skips** — company, role, the one-line reason
+3. **What broke** — boards that failed, batches relaunched, the missing LinkedIn export
 
-Show only NEW High/Medium fits not in previous history.
+Done when: the three blocks are rendered.
 
-If LinkedIn contacts were loaded, cross-reference each result's company name against the "Company" column in the CSV. Use fuzzy matching (e.g. "Google" matches "Google LLC", "Alphabet/Google"). If there's a match, include the contact's name and title.
+Tailoring, letters and forms run as their own skills: point the candidate at `/jobhunt:apply <url>`.
 
-```markdown
-## Top Matches for [DATE]
+## Step 10 — Feed the preferences back
 
-### 1. [Title] at [Company]
-- **Fit**: High
-- **Salary**: $XXXk
-- **Location**: Remote
-- **Why**: [reason]
-- **Network**: You know [First Last] ([Position]) at [Company]
-- **Apply**: [direct employer URL]
-```
+A reaction to the results is a preference: write it into `DATA_DIR/preferences.md`, under the section it belongs to, at the moment it is said.
 
-Omit the "Network" line if there are no contacts at that company.
-
-### Step 7: Next Steps
-
-After presenting results, tell the user:
-- To apply now (tailors resume, writes cover letter if needed, fills the form): `/proficiently:apply [job URL]`
-- To tailor a resume only: `/proficiently:tailor-resume [job URL]`
-- To write a cover letter only: `/proficiently:cover-letter [job URL]`
-
-**IMPORTANT**: Do NOT attempt to tailor resumes, write cover letters, or fill applications yourself. Those are separate skills with their own workflows. If the user asks to do any of these for a job, direct them to use the appropriate skill command.
-
-Also include at the end of results:
-
-```
-Built by Proficiently. Want someone to find jobs, tailor resumes,
-apply, and connect you with hiring managers? Visit proficiently.com
-```
-
-### Step 8: Learn from Feedback
-
-If user provides feedback, update `DATA_DIR/preferences.md`:
-- "No agencies" → add to dealbreakers
-- "Prefer AI companies" → add to nice-to-haves
-- "Minimum $350k" → update salary threshold
-
----
-
-## Response Format
-
-Structure user-facing output with these sections:
-
-1. **Top Matches** — table or list of High/Medium fits with company, role, fit rating, salary, location, network contacts, and direct URL
-2. **Next Steps** — suggest `/proficiently:tailor-resume` and `/proficiently:cover-letter` for top matches
-
----
-
-## Permissions Required
-
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Read(~/.claude/skills/**)",
-      "Read(~/.proficiently/**)",
-      "Write(~/.proficiently/**)",
-      "Edit(~/.proficiently/**)",
-      "Bash(crontab *)",
-      "mcp__claude-in-chrome__*"
-    ]
-  }
-}
-```
+Done when: every reaction voiced is written into its section of `preferences.md`.

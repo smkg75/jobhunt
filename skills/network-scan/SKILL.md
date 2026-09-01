@@ -1,297 +1,84 @@
 ---
 name: network-scan
-description: Scan your LinkedIn contacts' companies for matching job openings
+description: Check whether the companies where the candidate already knows someone are hiring.
 argument-hint: "number of contacts (default 25) or 'all'"
+disable-model-invocation: true
 ---
 
-# Network Scan Skill
+# Network scan
 
-> **Priority hierarchy**: See `shared/references/priority-hierarchy.md` for conflict resolution.
+A warm introduction beats a cold form. This pass walks the candidate's LinkedIn connections back to their companies, reads what those companies have open, and ranks it.
 
-Proactively check whether companies where you know someone are hiring for roles that match you. First run builds a cache of company careers page URLs. Subsequent runs reuse the cache, making weekly checks fast.
+Instructions that conflict resolve through `shared/references/priority-hierarchy.md`.
 
-## Quick Start
+## Step 0 — Load the data directory
 
-- `/proficiently:network-scan` - Scan companies from your 25 most recent contacts
-- `/proficiently:network-scan 50` - Check the 50 most recent contacts
-- `/proficiently:network-scan all` - Check all contacts (can be slow with 1500+)
+Resolve `DATA_DIR` per `shared/references/data-directory.md`, then check prerequisites per `shared/references/prerequisites.md`. This pass runs on `DATA_DIR/linkedin-contacts.csv`, the candidate's LinkedIn connections export.
 
-## File Structure
+Read `DATA_DIR/preferences.md`, `DATA_DIR/profile.md`, `DATA_DIR/companies.md` and `DATA_DIR/job-history.md`.
 
-```
-scripts/
-  resolve-careers.md     # Subagent for resolving a batch of company careers URLs
-  evaluate-company.md    # Subagent for scanning a batch of companies' open roles
-```
+## Step 1 — Pick the contacts
 
-User data (stored at ~/.proficiently/):
-```
-~/.proficiently/
-  resume/                # Your resume PDF/DOCX
-  preferences.md         # Job matching rules
-  profile.md             # Work history from interview
-  linkedin-contacts.csv  # LinkedIn contacts export
-  company-careers.json   # Cached company careers URLs
-  network-scan-history.md # Running log of scan results
-  jobs/                  # Per-job application folders
-```
+`$ARGUMENTS` sets how many: a number takes that many, `all` takes every contact — say so first when there are more than 200, the pass is long — and an empty argument takes 25.
 
----
-
-## Workflow
-
-### Step 0: Check Prerequisites
-
-Resolve the data directory, then check prerequisites per `shared/references/prerequisites.md`. Resume, preferences, and linkedin-contacts.csv are all required.
-
-Load these files for use in later steps:
-- `DATA_DIR/preferences.md` (target roles, must-haves, dealbreakers, nice-to-haves)
-- `DATA_DIR/resume/*` (candidate profile)
-- `DATA_DIR/profile.md` (work history, if it exists)
+Sort `linkedin-contacts.csv` by `Connected On`, most recent first, and take the first N. Group them by company; a contact with a blank company drops out. Each company keeps its people: name, position, profile URL.
 
-### Step 1: Select Contacts & Extract Companies
+Done when the pass holds a company list with its contacts attached, and has told the candidate how many companies came out of how many contacts.
 
-Parse `$ARGUMENTS`:
-- If a number (e.g., `50`): use that as the contact limit
-- If `all`: use all contacts (warn user this may be slow if > 200)
-- If empty/missing: default to 25
+## Step 2 — Give every company a careers page
 
-Read `~/.proficiently/linkedin-contacts.csv`. Sort by "Connected On" descending (most recent first). Take the first N contacts based on the limit.
+For each company, in `DATA_DIR/companies.md`:
 
-Extract unique company names from the selected contacts. Skip companies with empty or blank names.
+- **Row present** — it gives `careers URL`, `ATS` and `slug`. A row whose `last visit` is within seven days keeps all three as they stand.
+- **Row present, noted `ignored`** — the company drops out of the pass.
+- **No row** — open the company's own site per `shared/references/browser-setup.md`, follow its careers or jobs link, recognize the platform against `ats/index.md`, and add the row with its contact in the `contact` column.
+- **Careers page out of reach** — add the row with `careers page not found` in `note`, and name the company in the "what broke" block.
 
-Group contacts by company into a lookup:
-```
-{
-  "Google": [{"name": "Jane Smith", "position": "PM Director", "url": "https://linkedin.com/in/janesmith"}, ...],
-  "Stripe": [{"name": "John Doe", "position": "Eng Manager", "url": "https://linkedin.com/in/johndoe"}]
-}
-```
+Done when every company of the list has a row in `companies.md` carrying a careers URL, or sits in the "what broke" block.
 
-Report to user: "Found X unique companies from Y contacts. Checking careers pages..."
+## Step 3 — Read the openings
 
-### Step 2: Resolve Careers Pages (Parallelized)
+Split the companies that have a careers URL into batches of five. One sub-agent per batch follows `scripts/evaluate-company.md`, five running at once at most, each in its own tab.
 
-Load `~/.proficiently/company-careers.json` if it exists (the cache). If it doesn't exist, start with an empty object.
+Each batch receives its companies (name, careers URL, ATS, slug, contacts) and the keywords built from `preferences.md` § Target roles, variants included.
 
-Split companies into three groups:
-- **Cached (fresh)**: `last_checked` within last 7 days - use as-is, no work needed
-- **Cached (stale)**: `last_checked` older than 7 days - needs re-verification
-- **Uncached**: not in cache, or `type` is `"not_found"` and stale - needs full resolution
+A batch that fails or times out is logged with the companies it held, and the pass moves on — those companies come back on the next run.
 
-Report: "X companies from cache, Y need resolution..."
+Done when every batch has returned or been logged as failed with the companies it held.
 
-**Parallel resolution using subagents:**
+## Step 4 — Rank
 
-Take all companies needing resolution (stale + uncached) and split them into batches of 10. Spawn one subagent per batch using the Task tool (`subagent_type: "general-purpose"`). Run all batches in parallel.
+Score every opening returned with `shared/references/fit-scoring.md`. One verdict, one line of reason, dated.
 
-Each subagent receives:
-- A batch of company names to resolve
-- Instructions from `scripts/resolve-careers.md`
+Done when every opening returned carries a verdict and its dated reason.
 
-Each subagent uses `WebSearch` (NOT the browser) to find careers pages:
-1. Search: `"[Company Name]" careers jobs site:[company domain if known]`
-2. From the search results, identify the careers/jobs page URL
-3. Classify the URL type:
-   - `"direct"` - company's own careers page (e.g., careers.google.com)
-   - `"greenhouse"` - Greenhouse ATS (boards.greenhouse.io/company or company.greenhouse.io)
-   - `"lever"` - Lever ATS (jobs.lever.co/company)
-   - `"workday"` - Workday ATS (company.wd5.myworkdayjobs.com)
-   - `"other_ats"` - other ATS platforms (Ashby, BambooHR, etc.)
-   - `"not_found"` - no careers page could be found (set `careers_url` to null)
-4. Return results for the batch
+## Step 5 — Record the pass
 
-Collect results from all subagents and merge into the cache. Save `~/.proficiently/company-careers.json`. Format:
-```json
-{
-  "Company Name": {
-    "careers_url": "https://careers.example.com",
-    "type": "direct",
-    "last_checked": "YYYY-MM-DD",
-    "last_found_roles": 0
-  }
-}
-```
+- **`companies.md`** — for every company scanned: `last visit` set to today, `last role seen` refreshed, `contact` carrying the connection, `ATS` and `slug` completed by what the sub-agent read.
+- **`job-history.md` § Runs** — one run block in the format `skills/job-search/SKILL.md` Step 8 defines, with `Source: network` and, in place of queries, the contact count and company count. Every company scanned takes at least one row; a company with nothing open takes a single row carrying `no opening` in `notes`, and every opening's row names its contact in `notes`.
+- **`jobs/`** — each `High` gets its folder and its `posting.md` exactly as `skills/job-search/SKILL.md` Step 7 defines, `Source` naming the company.
 
-Report progress: "Resolved X new careers pages, Y from cache, Z not found."
+Done when `companies.md`, `job-history.md` § Runs and the `jobs/` folders agree on this pass.
 
-### Step 3: Scan for Matching Jobs (Parallelized)
+## Step 6 — Report
 
-Take all companies with a valid `careers_url` (skip `not_found` and `ignored` entries). Split them into batches of 5 companies each.
+Return, in this order:
 
-**Spawn parallel subagents** using the Task tool (`subagent_type: "general-purpose"`). Run all batches in parallel (up to 5 concurrent subagents to avoid overwhelming the browser).
+1. **Matches** — grouped by fit: company, role, location, link, the contact to ask for the introduction, the folder for each High
+2. **Scanned, nothing matching** — company with the number of openings it showed
+3. **No careers page** — the companies of Step 2 that stayed out of reach
+4. **What broke** — batches that failed and the companies they held
 
-Each subagent receives:
-- A batch of companies (name, careers_url, ATS type, network contacts)
-- Candidate profile summary (from resume)
-- Preferences (target roles, must-haves, dealbreakers, nice-to-haves)
-- Instructions from `scripts/evaluate-company.md`
+Done when the four blocks are rendered.
 
-Each subagent:
-1. Creates its own browser tab (`tabs_context_mcp` then `tabs_create_mcp`)
-2. For each company in its batch:
-   a. Navigate to the careers page
-   b. Search/browse for roles matching target roles and keywords
-   c. For ATS pages, use platform search/filter functionality:
-      - **Greenhouse**: search box or department filters
-      - **Lever**: search bar or team filter
-      - **Workday**: keyword search field
-      - **Direct/other**: browse the page, use any search, scan listed roles
-   d. Extract listings: title, location, URL
-   e. Score each listing (High/Medium/Low/Skip per fit criteria)
-   f. Return only High and Medium fits
-3. Returns results for its entire batch
+Close as `skills/job-search/SKILL.md` Step 9 closes.
 
-**Fit scoring criteria:** See `shared/references/fit-scoring.md` for the canonical definitions.
+## Step 7 — Feed the results back
 
-Collect results from all subagents. Update `last_found_roles` count in the cache for each company scanned.
+At the moment the candidate reacts:
 
-If a subagent fails or times out, log the companies it was processing and move on. Do not retry - the user can re-run with those companies next time.
+- "Skip this company" → `ignored` in that row's `note` in `companies.md`; later passes leave it alone.
+- A corrected careers URL, ATS or slug → the row, right away.
+- Anything about roles, package, sectors or size lands as `skills/job-search/SKILL.md` Step 10 says.
 
-### Step 4: Save Results
-
-**Update company-careers.json:**
-Update `last_checked` and `last_found_roles` for every company that was scanned.
-
-**Append to `~/.proficiently/network-scan-history.md`:**
-
-If the file doesn't exist, create it with:
-```markdown
-# Network Scan History
-
-This file tracks all network scans run by the `/network-scan` skill.
-
----
-```
-
-Then append:
-```markdown
-## YYYY-MM-DD - Network Scan (N contacts, M companies)
-
-| Company | Contact | Role Found | Fit | URL |
-|---------|---------|------------|-----|-----|
-| Google | Jane Smith (PM Director) | Sr. Product Manager | High | https://... |
-| Stripe | John Doe (Eng Manager) | No matching roles | - | - |
-```
-
-Include all companies scanned (both matches and non-matches) in the table.
-
-**Save full postings for High-fit matches:**
-For each High-fit match, navigate to the job posting URL and save the full posting to `~/.proficiently/jobs/[company-slug]-[YYYY-MM-DD]/posting.md` using the standard format:
-
-```markdown
-# [Job Title] - [Company Name]
-
-**Company**: [Company]
-**Location**: [Location]
-**Salary**: [Salary or N/A]
-**Type**: [Type]
-**Source**: network-scan
-**Date Found**: YYYY-MM-DD
-**Network Contact**: [Contact Name] ([Position]) - [LinkedIn URL]
-
-## About the Role
-[Description]
-
-## Key Requirements
-- [requirement]
-
-## Direct Careers Page
-- [URL]
-
-## Fit Assessment
-**Rating**: [High/Medium]
-**Why**: [explanation]
-```
-
-### Step 5: Present Results
-
-Show matches grouped by fit, with contact info for warm introductions:
-
-```markdown
-## Network Scan Results - YYYY-MM-DD
-Scanned N companies from M contacts.
-
-### Matches Found
-
-#### 1. Senior Product Manager at Google
-- **Fit**: High
-- **Your contact**: Jane Smith (PM Director) - [LinkedIn](url)
-- **Location**: Mountain View, CA
-- **Apply**: https://careers.google.com/jobs/...
-- **Why**: [brief match reason]
-
-#### 2. Strategy Lead at Stripe
-- **Fit**: Medium
-- **Your contact**: John Doe (Eng Manager) - [LinkedIn](url)
-- **Location**: Remote
-- **Apply**: https://stripe.com/jobs/...
-- **Why**: [brief match reason]
-
-### Companies Checked (No Matches)
-Google (3 open roles, none matching), Stripe (0 open roles), ...
-
-### Companies Without Careers Pages
-Acme Corp, Small Startup LLC, ...
-```
-
-If no matches were found across all companies:
-```markdown
-## Network Scan Results - YYYY-MM-DD
-Scanned N companies from M contacts. No matching roles found this time.
-
-### Companies Checked
-[List with role counts]
-
-### Companies Without Careers Pages
-[List]
-
-Try again next week, or expand your search: `/proficiently:network-scan 100`
-```
-
-End with:
-```
-To tailor a resume: /proficiently:tailor-resume [job URL]
-To write a cover letter: /proficiently:cover-letter [job URL]
-
-Built by Proficiently. Want someone to find jobs, tailor resumes,
-apply, and connect you with hiring managers? Visit proficiently.com
-```
-
-### Step 6: Learn from Feedback
-
-If the user provides feedback after seeing results:
-
-- **"Skip [company]"**: Add `"ignored": true` to that company's entry in company-careers.json. Future scans will skip it.
-- **Corrects a careers URL**: Update the cache entry with the correct URL and type.
-- **Adjusts preferences**: Update `~/.proficiently/preferences.md` accordingly (e.g., "add fintech to nice-to-haves", "no crypto companies").
-
----
-
-## Response Format
-
-Structure user-facing output with these sections:
-
-1. **Network Matches** — list of High/Medium fits with company, role, fit rating, contact name, and apply URL
-2. **Companies Checked** — summary of companies with no matches and companies without careers pages
-3. **Next Steps** — suggest `/proficiently:tailor-resume` and `/proficiently:cover-letter` for top matches
-
----
-
-## Permissions Required
-
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "permissions": {
-    "allow": [
-      "Read(~/.claude/skills/**)",
-      "Read(~/.proficiently/**)",
-      "Write(~/.proficiently/**)",
-      "Edit(~/.proficiently/**)",
-      "mcp__claude-in-chrome__*"
-    ]
-  }
-}
-```
+Done when every reaction voiced is written into its file.
