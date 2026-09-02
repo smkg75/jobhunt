@@ -64,10 +64,25 @@ the option at its coordinates. Afterwards the value is **not** in `input.value`,
 read it in the sibling `div.select__single-value`, or on screen. "Location (City)" can list the same
 city twice, and its selection fills a hidden latitude and longitude.
 
+**The fields carry an `id`, not a `name`.** `document.querySelector('input[name=first_name]')`
+returns nothing on this render; `#first_name`, `#last_name`, `#email`, `#phone`, `#country`,
+`#candidate-location` and `#question_<id>` all resolve. A verification script written on `name`
+reports every field as missing while the form is in fact filled.
+
+**A successful attach removes the file input from the DOM.** Greenhouse replaces
+`<input type=file name=resume>` with a chip carrying the file name and a remove cross, so
+`input.files[0]` cannot be read back afterwards. Confirm an upload by the chip text, not by the
+input: the file names appear as leaf nodes ending in `.pdf` inside the form.
+
+**A react-select leaves its own input empty.** After picking, `#country` and `#candidate-location`
+both read as `""`; the chosen values sit in the sibling `[class*=single-value]` nodes, as `+33` and
+`Paris, France`. Read those.
+
 **An invisible reCAPTCHA sits in the footer.** Nothing to solve, it only fires on submit.
 
 ## Last tested
 
-2026-09-02 — an employer, Enterprise Account Executive - EMEA
-(`job-boards.greenhouse.io/<slug>/jobs/<id>`), single-page form on the posting page itself,
-filled end to end, not submitted.
+2026-09-03 — an employer, AI Engineer (`job-boards.greenhouse.io/<slug>/jobs/<id>`), single-page
+form on the posting page itself, resume and cover letter both attached, filled end to end, not
+submitted. Earlier: 2026-09-02, an employer, Enterprise Account Executive - EMEA
+(`job-boards.greenhouse.io/<slug>/jobs/<id>`).
