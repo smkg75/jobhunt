@@ -1,8 +1,9 @@
 % ============================================================
 % Lettre de motivation — gabarit
-% Expéditeur en haut à gauche, destinataire en haut à droite,
-% date, objet, puis trois paragraphes : Vous, Je, Nous.
-% A4 portrait, Roboto 11 pt, une page. Compile avec tectonic.
+% Expéditeur en haut à gauche, destinataire en quinconce
+% dessous à droite, date alignée sur lui, objet, puis trois
+% paragraphes : Vous, Je, Nous. A4 portrait, Roboto 11 pt,
+% une seule graisse, une page. Compile avec tectonic.
 %
 % Tout ce qui est entre <chevrons> se remplace ; rien d'autre
 % ne change. Dans le texte : € s'écrit \texteuro{}, % s'écrit
@@ -22,42 +23,39 @@
 \usepackage{hyperref}
 
 \definecolor{ink}{HTML}{1A1D21}
-\definecolor{body}{HTML}{3C4247}
 
 \pagestyle{empty}
 \hypersetup{hidelinks}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{10pt}
+\setlength{\parskip}{9pt}
 \linespread{1.12}
-\color{body}
+\newlength{\decalage}\setlength{\decalage}{0.55\textwidth}
+\color{ink}
 
 \begin{document}
 
-% ---- Expéditeur (gauche) et destinataire (droite) ----
-\begin{minipage}[t]{0.5\textwidth}
-  {\Large\color{ink}\robotobold <Prénom Nom>}\\[4pt]
-  <Rue>\\
-  <Code postal Ville>\\[4pt]
-  <Mobile>\\
-  \href{mailto:<Email>}{<Email>}
-\end{minipage}%
-\hfill
-\begin{minipage}[t]{0.4\textwidth}
-  {\color{ink}\robotobold <Société>}\\
-  <Destinataire>\\
-  <Adresse de la société>\\
-  <Code postal Ville de la société>
+% ---- Expéditeur ----
+<Prénom Nom>\\
+<Rue>\\
+<Code postal Ville>\\
+<Mobile>\\
+\href{mailto:<Email>}{<Email>}
+
+\vspace{\parskip}
+% ---- Destinataire, en quinconce ----
+\hspace*{\decalage}\begin{minipage}[t]{\dimexpr\textwidth-\decalage\relax}
+<Société>\\
+<Destinataire>\\
+<Adresse de la société>\\
+<Code postal Ville de la société>
 \end{minipage}
 
-\vspace{18pt}
-\begin{flushright}
-<Ville>, le <date>
-\end{flushright}
+\vspace{\parskip}
+\hspace*{\decalage}<Ville>, le <date>
 
-\vspace{6pt}
-{\color{ink}\robotobold Objet : Lettre de motivation pour le poste de <Poste>}
+\vspace{\parskip}
+Objet : Lettre de motivation pour le poste de <Poste>
 
-\vspace{4pt}
 Madame, Monsieur,
 
 <Paragraphe Vous>
@@ -68,7 +66,6 @@ Madame, Monsieur,
 
 Cordialement,
 
-\vspace{14pt}
-{\robotomedium <Prénom Nom>}
+<Prénom Nom>
 
 \end{document}
