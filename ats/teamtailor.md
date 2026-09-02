@@ -20,9 +20,16 @@ A short identity form followed by the company's own questions. The whole toolbox
 
 ## Traps
 
-"Connect with LinkedIn" imports a partial profile in place of the resume. Decline it and upload the
-PDF.
+"Postuler via LinkedIn" / "Connect with LinkedIn" sits at the top of the identity block. Try it
+first: it pre-fills the identity fields from the LinkedIn profile, and the resume PDF still goes into
+"Importer un CV" afterwards — the import does not replace that field. If it opens a LinkedIn sign-in
+the session cannot complete, leave it and fill the fields by hand rather than staying stuck. On
+2026-09-02 a pass declined the button on the strength of the old note here, and the candidate had to
+click it himself.
+
+The form is a full-screen modal on the posting's own URL: `tabs_context_mcp` shows the posting URL,
+not a form URL. Reloading the page drops the modal and everything typed or imported into it.
 
 ## Last tested
 
-never
+2026-09-02
