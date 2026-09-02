@@ -20,7 +20,7 @@ Keep the lines the letter actually uses, plus every must-have of the posting. A 
 
 Language of the posting. 150 to 250 words across the three paragraphs, unless `preferences.md` `## Application rules` sets another band.
 
-The shape is the French one, whatever the language: a subject line, a salutation, three paragraphs a French recruiter reads as "Vous, Je, Nous", a sign-off. `## Letter` carries them in that order. It is what a text field receives, and what the template's placeholders receive when the form wants a file.
+The shape is the French one, whatever the language: a subject line, a salutation, three paragraphs a French recruiter reads as "Vous, Je, Nous", a sign-off. `## Letter` carries them in that order, and the template's placeholders receive them when the form wants a file. **A text field receives the salutation, the paragraphs and the sign-off only**: no subject line, no header — the field already sits under the posting, and a candidate removed the line by hand on 2026-09-02 ("no need when it's inside").
 
 1. **Subject line** — `Objet : Lettre de motivation pour le poste de <role>`, the role as the posting titles it. In English, `Subject: Cover letter for the <role> position`.
 2. **Salutation** — the addressee by name, looked for before settling on the generic form. The `Contact:` line of `posting.md` first; empty, open the posting URL once and read the recruiter card, the "meet the team" or contact block, the signature of the contact e-mail; a name found goes into `Contact:`. Named: `Madame Dupont,` or `Monsieur Dupont,`; in English, `Dear Jane Dupont,`. Nothing on the posting: `Madame, Monsieur,`, in English `Dear Hiring Manager,`. No search beyond the posting.
