@@ -67,6 +67,11 @@ fields are filled by hand.
 **Required fields carry a red asterisk on the label**, and the form heads with "* Champs requis".
 An optional field carries no asterisk at all.
 
+**The submit is not the end.** « Envoyer ma candidature » lands on `/apply/thanks`, « Vous y êtes
+presque ! » : Taleez e-mails a confirmation link to the candidate's address and calls that click
+« obligatoire pour valider votre candidature ». Until it is clicked the status is `sent (unconfirmed)`;
+the mail is the next thing to open (an employer, 2026-09-02).
+
 ## Last tested
 
 2026-09-02 — an employer, Team Leader Sales B2B
