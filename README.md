@@ -86,6 +86,10 @@ DATA_DIR/
 | Teamtailor | `ats/teamtailor.md` |
 | Ashby | `ats/ashby.md` |
 | Workable | `ats/workable.md` |
+| Rippling | `ats/rippling.md` |
+| Deel | `ats/deel.md` |
+| Recruitee | `ats/recruitee.md` |
+| Taleez | `ats/taleez.md` |
 
 ## Adding a board or an ATS
 
