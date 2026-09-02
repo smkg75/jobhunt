@@ -70,7 +70,9 @@ An optional field carries no asterisk at all.
 **The submit is not the end.** « Envoyer ma candidature » lands on `/apply/thanks`, « Vous y êtes
 presque ! » : Taleez e-mails a confirmation link to the candidate's address and calls that click
 « obligatoire pour valider votre candidature ». Until it is clicked the status is `sent (unconfirmed)`;
-the mail is the next thing to open (an employer, 2026-09-02).
+the mail (`no-reply@taleez.com`, « Confirmez votre candidature pour <role> ») arrives within the
+minute, and its `taleez.com/apply/confirm/<uuid>` link opened in the browser answers « Candidature
+bien reçue ! » — that page is the confirmation to read (an employer, 2026-09-02).
 
 ## Last tested
 
