@@ -21,8 +21,8 @@ Uploading the resume pre-fills several fields at once. Re-read every pre-filled 
 on: the parser guesses, and a wrong guess is submitted as an answer.
 
 The "Autofill from resume" box at the top of the form is a separate `<input type=file>` from the
-Resume field below. `file_upload` on the autofill input fills both: it parses the PDF and lands the
-same file in the Resume field. One upload, not two.
+Resume field below. **It parses the PDF but does not fill the Resume field: upload twice**, once on
+the autofill input, once on the Resume input. See § Traps.
 
 Text fields, text areas and date fields take `form_input`. A date field with the `Pick date...`
 placeholder accepts an ISO value and renders it back in US order, so `2026-09-02` shows as
@@ -33,6 +33,38 @@ Yes/No toggles and radio buttons need a coordinate click, not a `ref` click. See
 On a multi-step form, clicking continue on an empty step makes the form list its required fields.
 
 ## Traps
+
+**"Autofill from resume" does not attach the resume.** It parses the PDF into the text fields and
+leaves the Resume `<input type=file>` empty, so a form filled that way fails on a required field
+nothing flags. Upload the same file a second time on the Resume input, whose id is
+`_systemfield_resume`, and read `input.files[0]` back before moving on.
+
+**What the parser fills, it fills wrong as often as right.** On a French resume it wrote the surname
+in capitals into "Preferred First & Last Name" ("First LAST") and left "Phone Number" empty, while
+email and LinkedIn came back correct. Re-read every field it touched, and every field it did not.
+
+**Required is a CSS class, not an attribute.** The red asterisk lives in the label's class list, so
+the whole form reads in one call, no scrolling and no screenshots:
+
+```javascript
+Array.from(document.querySelectorAll('div[data-field-path]')).map(d => {
+  const lab = d.querySelector('label'), ctl = d.querySelector('input,textarea,select');
+  return [d.getAttribute('data-field-path'), lab && lab.innerText.trim(),
+          lab && /_required_/.test(lab.className) ? 'REQ' : 'opt',
+          ctl && ctl.tagName + ':' + ctl.type].join(' ~ ');
+});
+```
+
+**A field the DOM calls `input[type=text]` can still be a combobox.** The location field and single
+select custom questions render as text inputs and open a suggestion list: `form_input` types into
+them, then the option has to be clicked at its coordinates. The location list repeats the same city
+twice, and offers the American homonyms below it, so "Paris, France" sits at rows one and two with
+Paris, Texas underneath.
+
+**Typing filters a closed list down to what looks like free text.** "How did you hear about us?"
+took the word "Indeed" and showed a single option, "Job Board (Indeed, LinkedIn Jobs, etc.)". The
+value that registers is the option, never the typed text.
+
 
 **That empty-continue probe belongs to multi-step forms only.** On a single-page Ashby form the same
 button is the submit button, so count the steps before using it.
@@ -54,5 +86,5 @@ writing an answer to it.
 
 ## Last tested
 
-2026-09-02 — an employer, VP Revenue (`jobs.ashbyhq.com/<slug>`), single-page form filled end to
-end, not submitted.
+2026-09-02 — an employer, VP Revenue (`jobs.ashbyhq.com/<slug>`), and an employer, Account
+Executive EMEA (`jobs.ashbyhq.com/<slug>`), single-page forms filled end to end, not submitted.
