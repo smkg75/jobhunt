@@ -37,6 +37,21 @@ a full page, complete, and the browser tools work on it normally. Reach for that
 spinner outlives a few seconds, and note that nothing is lost by navigating while the modal is
 still empty.
 
+**A question's field name depends on its type.** The suffix is `answers_attributes][N][text]`,
+`[textarea]`, `[choice]`, `[boolean]` or `[date]`. A verification pass written on `[choice]` alone
+reports a filled boolean question as unanswered, which is how a correctly ticked "Have you worked in
+a SaaS company before?" was read back as empty. Query `[name*="answers_attributes][N]["]` and let the
+element tell you its type.
+
+**A date question is a native date input**, not a free-text field: "What could be your potential
+start date?" only takes an ISO value. A sentence such as "available immediately" cannot go in.
+
+**The consent checkbox sits behind a Rails hidden twin.** `input[name="candidate[consent_given]"]`
+matches a hidden input with value `0` first, so `querySelector(...).checked` returns false while the
+real box is ticked. Filter on `input[type=checkbox]`. Two consents exist and they are not the same:
+`candidate[consent_given]` is required to apply, `candidate[consent_given_future_jobs]` is a talent
+pool opt-in and stays unticked.
+
 ## Last tested
 
 2026-09-03 — a form on a branded domain, thirteen custom questions plus the
