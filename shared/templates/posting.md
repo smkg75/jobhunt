@@ -13,6 +13,7 @@ URL: <posting URL>
 Apply URL: <the form, when the posting names it>
 Found: YYYY-MM-DD
 Posted: YYYY-MM-DD
+Contact: <the person the posting names — recruiter card, "meet the team" block, signature of the contact e-mail — with their role; empty when none>
 
 ## Brief
 
@@ -33,4 +34,5 @@ transferable), closed by `Gaps:`.
 Every field the form asks for, each marked required or optional.
 ```
 
-Both URLs sit in the header because the page may be gone by the time the folder is reread.
+Both URLs sit in the header because the page may be gone by the time the folder is reread. So does
+`Contact:`: the letter's salutation and recipient block read it.

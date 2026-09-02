@@ -1,7 +1,7 @@
 {
   "name": "jobhunt",
   "description": "Searches job boards, scores postings, tailors the resume and cover letter, and fills the application form",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": {
     "name": "smkg75",
     "url": "https://github.com/smkg75"
