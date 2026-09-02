@@ -39,6 +39,16 @@ The `job_id` is a search-session handle (`JOBSEARCH_<n>`), not a stable id: it i
 `get_job_details` inside the same pass, and the `to.indeed.com` short link changes between calls on
 the same posting.
 
+The "Apply now" button of a posting page opens **Indeed Apply, which asks for a signed-in Indeed
+account**: the browser session carries none, and the page offers "Sign in to Indeed with Google"
+instead of a form. The employer's own form is then the only channel, and the posting page does not
+link it: reach it from the company's website, whose careers link ("On recrute !", "Nous rejoindre")
+lands on the ATS. That ATS URL, not the Indeed one, is the durable URL of the posting.
+
+A posting's publication date on Indeed can be later than the one its ATS shows, the board reposting
+an older offer: an employer read 25 August 2026 on Indeed and 20 July 2026 on Taleez. The
+ATS date is the one § Freshness reads.
+
 ## Last tested
 
 2026-09-02

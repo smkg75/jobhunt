@@ -14,6 +14,7 @@ URL says which, and the file says how its form behaves.
 | Rippling | `ats/rippling.md` | `ats.rippling.com/<slug>/jobs` |
 | Deel | `ats/deel.md` | `jobs.deel.com/<slug>` |
 | Recruitee | `ats/recruitee.md` | `<slug>.recruitee.com/o/<job-slug>` |
+| Taleez | `ats/taleez.md` | `taleez.com/apply/<job-slug>`, `<slug>.taleez.com` |
 
 ## Skeleton
 
