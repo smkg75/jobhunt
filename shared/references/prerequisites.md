@@ -13,6 +13,7 @@ skill on: "`<file>` is missing. Run `/jobhunt:setup` first."
 | `DATA_DIR/job-history.md` | creates | required | — | — | required | required | required |
 | `DATA_DIR/companies.md` | creates | required | — | — | — | required | required |
 | `DATA_DIR/resume/` | creates | — | required | — | required | — | required |
+| `DATA_DIR/cover-letter/` | creates | — | — | optional | optional | — | optional |
 | `DATA_DIR/linkedin-contacts.csv` | offers | optional | — | — | — | required | optional |
 
 Two files bend the rule:

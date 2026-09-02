@@ -8,7 +8,6 @@ Every resume bullet and every cover letter this plugin writes, in any language, 
 - Plain words. "Leveraging", "track record", "aligns perfectly" and the rest of the assistant register
   stay out, jargon with them.
 - Each sentence opens on a different word from the one before it. Same between paragraphs.
-- "I" — "J'ai" in French — appears once per letter at most.
 - A sentence carrying a figure stays on one role.
 - A finished job is told in the past tense, and its end is stated as a dated fact.
 - An ambiguous fact is left out rather than smoothed over.

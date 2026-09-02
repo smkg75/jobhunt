@@ -17,6 +17,7 @@ body is written in whatever language the candidate works in.
 | `companies.md` | companies followed and their ATS |
 | `linkedin-contacts.csv` | the LinkedIn connections export |
 | `resume/` | one canonical resume per language, source and output side by side |
+| `cover-letter/` | one letter template per language, source and built sample side by side |
 | `jobs/` | one folder per application |
 
 ## Resumes
@@ -26,6 +27,16 @@ _One line per canonical resume. The first line is the default. `src` is a path r
 
 build: _the command that builds a resume, run from the folder holding the source, with `<src>` where
 the file name goes_
+
+| lang | src | output |
+|---|---|---|
+| | | |
+
+## Cover letters
+
+_One line per letter template, built with the `build:` line above. `src` is a path relative to
+`cover-letter/`; `output` is the file name the build writes for that source. Everything between
+`<angle brackets>` in the source is replaced at each letter, nothing else._
 
 | lang | src | output |
 |---|---|---|

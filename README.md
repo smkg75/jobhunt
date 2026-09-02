@@ -10,10 +10,10 @@ directory outside it.
 
 | Command | Argument | Produces |
 |---|---|---|
-| `/jobhunt:setup` | `interview` to jump straight to the questions | the data directory, its files filled in from `shared/templates/`, the resume in `resume/` |
+| `/jobhunt:setup` | `interview` to jump straight to the questions | the data directory, its files filled in from `shared/templates/`, the resume in `resume/`, the letter template in `cover-letter/` |
 | `/jobhunt:job-search` | keywords, optional | a pass table in `job-history.md` § Runs, and `posting.md` under `jobs/` for every High |
 | `/jobhunt:tailor-resume` | a posting URL, `last` or `current` | `posting.md` § Match and the built resume in `tailored-resume/` |
-| `/jobhunt:cover-letter` | a posting URL, `last` or `current` | `cover-letter/cover-letter.md`, plus a PDF when the form wants a file |
+| `/jobhunt:cover-letter` | a posting URL, `last` or `current` | `cover-letter/cover-letter.md`, plus the letter on the candidate's template as a PDF when the form wants a file |
 | `/jobhunt:apply` | a posting URL, `last` or `current` | the form filled, `answers.md`, `applied.md`, a line in `job-history.md` § Applications |
 | `/jobhunt:network-scan` | a contact count, or `all` (default 25) | openings at the companies of the candidate's LinkedIn contacts, logged in `job-history.md` § Runs |
 | `/jobhunt:run` | keywords, optional | a search pass, then an application for every High, and a four-block report in `state.md` § Last run |
@@ -57,11 +57,14 @@ DATA_DIR/
 │   ├── <resume>.pdf
 │   ├── <resume>.<ext>            the source, when there is one
 │   └── images/
+├── cover-letter/               letter template, one per language, source and built sample flat
+│   ├── <letter>.tex              sender block filled, the rest in <angle brackets>
+│   └── <letter>.pdf
 └── jobs/
     └── <company>-<date>/       one folder per application
         ├── posting.md          header, Brief, Posting, Match, Form
         ├── tailored-resume/    the chosen source and its built output
-        ├── cover-letter/       cover-letter.md, plus .tex and .pdf when a file is wanted
+        ├── cover-letter/       cover-letter.md, plus the filled template and its PDF when a file is wanted
         ├── answers.md          question, answer, source
         └── applied.md          date, channel, send mode, status, replies
 ```
