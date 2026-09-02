@@ -45,6 +45,24 @@ group, invisible and undrivable, and the application is then lost from view.
 LinkedIn rate-limits fast: run one search at a time, and stop at the first captcha or "unusual
 activity" notice rather than retrying.
 
+**`location=<text>` is silently dropped; only `geoId` filters.** A search on `location=Ile-de-France,
+France` returned a page of Lyon roles. Île-de-France is `geoId=104246759`, and the parameter replaces
+`location` rather than joining it.
+
+`f_WT=1,3` keeps on-site and hybrid and drops the remote-only postings that otherwise fill a
+region search — at the cost of the "France - Remote" ones, which `preferences.md` says not to skip.
+Run at least one query without it.
+
+The cookie banner reappears after a navigation and swallows clicks near the bottom of the window.
+Decline the non-essential cookies each time it comes back.
+
+Reading a posting through `/jobs/view/<id>` renders the header and nothing else — the description
+stays empty. The description only renders inside the search page's detail panel: reach it with
+`/jobs/search/?…&currentJobId=<id>`, scroll to the top, click "Voir plus", then read `#job-details`.
+
+The virtualized list only fills the cards it has rendered: unrendered rows return an id and an empty
+body, so a card with no text is a card not yet scrolled to, not an empty posting.
+
 ## Last tested
 
-never
+2026-09-02

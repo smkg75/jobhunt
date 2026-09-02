@@ -29,6 +29,16 @@ from the posting — or the company's own form, which is an ATS: `ats/index.md`.
 Results carry no age of their own, so a search alone cannot tell a fresh posting from a stale one:
 call `get_job_details` on every result before scoring, its publication date is what § Freshness reads.
 
+A search returns at most ten results and answers "No job results found" on any phrasing it does not
+recognize — the same role in another wording returns a full list. Two phrasings per role, not one.
+
+`location` is matched loosely: "Paris" and "Paris, Île-de-France" return different lists, and neither
+is a region filter. Every result's own location is read again before scoring.
+
+The `job_id` is a search-session handle (`JOBSEARCH_<n>`), not a stable id: it is only valid for
+`get_job_details` inside the same pass, and the `to.indeed.com` short link changes between calls on
+the same posting.
+
 ## Last tested
 
-never
+2026-09-02
