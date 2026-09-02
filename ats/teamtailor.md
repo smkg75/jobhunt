@@ -30,6 +30,15 @@ click it himself.
 The form is a full-screen modal on the posting's own URL: `tabs_context_mcp` shows the posting URL,
 not a form URL. Reloading the page drops the modal and everything typed or imported into it.
 
+**The modal can hang on "Loading application form".** On 2026-09-03 it opened, showed the
+posting header and a spinner, and never rendered a field, through a scripted click and a real one
+alike. The form has its own address: **`<posting-url>/applications/new`** renders the same form as
+a full page, complete, and the browser tools work on it normally. Reach for that URL as soon as the
+spinner outlives a few seconds, and note that nothing is lost by navigating while the modal is
+still empty.
+
 ## Last tested
 
-2026-09-02
+2026-09-03 — a form on a branded domain, thirteen custom questions plus the
+identity block and a cover letter textarea, filled end to end on `/applications/new`, not
+submitted. Earlier: 2026-09-02.
