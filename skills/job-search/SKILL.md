@@ -2,7 +2,6 @@
 name: job-search
 description: Run one search pass over the tracked companies and the active job boards, and rank what it finds by fit.
 argument-hint: "optional search keywords"
-disable-model-invocation: true
 ---
 
 # Job search

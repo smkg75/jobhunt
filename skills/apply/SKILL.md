@@ -2,7 +2,6 @@
 name: apply
 description: Fill one job application end to end, from the posting to the record.
 argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab"
-disable-model-invocation: true
 ---
 
 # Apply

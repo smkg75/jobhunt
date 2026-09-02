@@ -2,7 +2,6 @@
 name: cover-letter
 description: Write the cover letter for one job posting, with the proof map it rests on.
 argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab"
-disable-model-invocation: true
 ---
 
 # Cover letter

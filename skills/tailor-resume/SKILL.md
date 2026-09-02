@@ -2,7 +2,6 @@
 name: tailor-resume
 description: Tailor the canonical resume to one job posting and write the match into posting.md.
 argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab"
-disable-model-invocation: true
 ---
 
 # Tailor resume

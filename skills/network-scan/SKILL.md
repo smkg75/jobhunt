@@ -2,7 +2,6 @@
 name: network-scan
 description: Check whether the companies where the candidate already knows someone are hiring.
 argument-hint: "number of contacts (default 25) or 'all'"
-disable-model-invocation: true
 ---
 
 # Network scan

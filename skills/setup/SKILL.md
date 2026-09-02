@@ -2,7 +2,6 @@
 name: setup
 description: One-time onboarding - install the data directory, take in the resume, grill the candidate, fill the data files.
 argument-hint: "'interview' to jump straight to the grill"
-disable-model-invocation: true
 ---
 
 # Setup

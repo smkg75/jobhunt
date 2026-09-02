@@ -2,7 +2,6 @@
 name: run
 description: One hands-off pass - search the boards, apply to every High in series, then report.
 argument-hint: "optional keywords to steer the search"
-disable-model-invocation: true
 ---
 
 # Run
