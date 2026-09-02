@@ -35,6 +35,12 @@ and fills the first files. Every other skill reads that path
 
 Browser work needs Chrome running with the Claude in Chrome extension active.
 
+## Editing the plugin
+
+The install is a copy, refreshed only when the version changes. `git config core.hooksPath .githooks`
+once in the checkout: every commit then bumps the patch version, and `claude plugin update
+jobhunt@jobhunt` picks the new copy up.
+
 ## The data directory
 
 ```
