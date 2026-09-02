@@ -3,6 +3,9 @@
 Step 3 of `skills/setup/SKILL.md`: pull out of the candidate what the resume does not say and what
 a fit verdict or a tailoring depends on.
 
+This is a grilling session. When the `grilling` skill is installed, invoke it and hand it the table
+of § What to ask as the guide for its questions; the rules of § How to ask hold either way.
+
 ## How to ask
 
 - **One question at a time.** Wait for the answer before the next one. Several questions in one

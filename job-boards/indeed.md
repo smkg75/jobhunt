@@ -14,8 +14,6 @@ country of `DATA_DIR/preferences.md` § Location. The call returns a list of res
 ## Read a posting
 
 `get_job_details(job_id)` gives the description, the salary, the publication date and the apply link.
-Call it on every result before scoring: the list returns old postings without saying so, and the
-publication date decides the `Freshness` dealbreaker.
 
 `get_company_data(companyName, …)` gives employee reviews, headcount and salary ranges — the look at
 the company that a `High` requires.
@@ -28,7 +26,8 @@ from the posting — or the company's own form, which is an ATS: `ats/index.md`.
 
 ## Traps
 
-Results carry no age of their own, so a search alone cannot tell a fresh posting from a stale one.
+Results carry no age of their own, so a search alone cannot tell a fresh posting from a stale one:
+call `get_job_details` on every result before scoring, its publication date is what § Freshness reads.
 
 ## Last tested
 

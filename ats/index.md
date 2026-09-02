@@ -12,17 +12,6 @@ URL says which, and the file says how its form behaves.
 | Ashby | `ats/ashby.md` | `jobs.ashbyhq.com/<slug>` |
 | Workable | `ats/workable.md` | `apply.workable.com/<slug>` |
 
-## How the forms behave
-
-| ATS | Iframe | `read_page` | `form_input` | Auth | Form type |
-|---|---|---|---|---|---|
-| Greenhouse | cross-origin | on the direct form URL | on the direct form URL | none | single page |
-| Lever | no | yes | yes | none | single page |
-| Workday | no | viewport only | yes, once signed in | account required | multi-step wizard |
-| Teamtailor | no | yes | yes | none | single page, short form plus questions |
-| Ashby | no | yes | yes | none | multi-step |
-| Workable | no | yes | yes | none | multi-step |
-
 ## Skeleton
 
 Every ATS file is `# <ATS>` followed by these six headings.

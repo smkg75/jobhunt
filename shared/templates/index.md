@@ -21,7 +21,8 @@ body is written in whatever language the candidate works in.
 
 ## Resumes
 
-_One line per canonical resume. The first line is the default. `src` is a path relative to `resume/`._
+_One line per canonical resume. The first line is the default. `src` is a path relative to `resume/`;
+`output` is the file name the `build:` line writes for that source._
 
 build: _the command that builds a resume, run from the folder holding the source, with `<src>` where
 the file name goes_

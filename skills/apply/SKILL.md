@@ -40,7 +40,7 @@ Match the URL against `ats/index.md` and `job-boards/index.md`:
 - Both offered on the same posting → the board's native flow goes first.
 - Only an email address in the posting → the mail channel; step 9 handles the send.
 
-Unknown ATS, the generic path: navigate, screenshot, read the page, and work the form as it presents itself. A trap you meet there that belongs to the ATS itself, not to this posting, becomes a new `ats/<name>.md` written on the skeleton of `ats/index.md` and committed to this repo — that knowledge lives in `ats/`, never as a note inside this skill.
+Unknown ATS, the generic path: navigate, screenshot, read the page, and work the form as it presents itself. A trap you meet there that belongs to the ATS itself, not to this posting, earns its file per `ats/index.md` § Adding an ATS.
 
 Done when: the application form is open in a tab of the MCP group, or the mail channel is chosen.
 
@@ -94,7 +94,7 @@ Done when: every field of `## Form` is filled, uploaded, or written into `answer
 
 `DATA_DIR/preferences.md` `## Send mode` decides the last gesture:
 
-- `draft` — everything filled, nothing submitted, tab closed. Status `ready to submit`. Mail channel: a Gmail draft (`create_draft`) — subject `Application — <role> — <candidate name>`, the letter as body, the tailored resume attached.
+- `draft` — everything filled, nothing submitted, tab closed. Status `ready to submit`. Mail channel: a Gmail draft (`create_draft`) — subject `Application - <role> - <candidate name>`, written in the posting's language (`Candidature - <poste> - <nom>` for a French posting), plain hyphens only; the letter as body, the tailored resume attached.
 - `auto-submit` — submit without asking. Read the confirmation on screen (`get_page_text`) or in the confirmation mail: status `sent`. No confirmation read: status `sent (unconfirmed)`. Mail channel: `send_message`, same subject, body and attachment.
 
 Done when: the application carries one of `sent`, `sent (unconfirmed)`, `ready to submit`.

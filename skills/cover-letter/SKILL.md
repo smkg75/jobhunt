@@ -31,12 +31,18 @@ Done when: `cover-letter.md` holds the two sections and has passed the review th
 
 `posting.md` `## Form` says whether the cover letter field takes text or a file. Text field: `cover-letter.md` is the deliverable, stop here.
 
-File: build the letter text, and only the letter text.
+File: build the letter laid out as a letter — sender, date, recipient, body, signature — and nothing a template would add. The five blocks, in the posting's language:
 
-- `DATA_DIR/index.md` carries a `build:` line: compose with the resume's engine. Write `cover-letter/cover-letter.tex` as a minimal document — A4, the font of the resume source, 11 pt, normal margins, the paragraphs of `## Letter` and nothing else: no header, no address block, no signature block, no template that adds content of its own. Build it in `cover-letter/` the way the `build:` line builds the resume, output `cover-letter.pdf`.
-- No `build:` line: use the machine's own converter on the letter text — on macOS, `cupsfilter -o media=A4` on a temporary text file, output `cover-letter.pdf`.
+1. sender block: name, city, email, phone, from `application-data.md` § Form sheet;
+2. the date of sending;
+3. recipient block: the company, and the addressee when the posting names one;
+4. the salutation, then the paragraphs of `## Letter`;
+5. the sign-off and the candidate's name.
 
-Done when: `cover-letter/` holds `cover-letter.md`, plus `cover-letter.tex` and `cover-letter.pdf` whose only content is the letter.
+- `DATA_DIR/index.md` carries a `build:` line: compose with the resume's engine. Write `cover-letter/cover-letter.tex` as a minimal document on the standard letter layout (the `letter` class does it) — A4, the font of the resume source, 11 pt, normal margins, the five blocks and nothing else. Build it in `cover-letter/` the way the `build:` line builds the resume, output `cover-letter.pdf`.
+- No `build:` line: the five blocks as plain text, converted by the machine's own converter — on macOS, `cupsfilter -o media=A4` on a temporary text file, output `cover-letter.pdf`.
+
+Done when: `cover-letter/` holds `cover-letter.md`, plus `cover-letter.tex` and `cover-letter.pdf` carrying the five blocks.
 
 ## Step 4 — Report
 
