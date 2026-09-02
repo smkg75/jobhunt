@@ -26,7 +26,8 @@ loads as a top-level page, where the browser tools work normally.
 ## Read a company's openings
 
 `https://boards-api.greenhouse.io/v1/boards/<slug>/jobs?content=true` — keyless, and `content=true`
-returns the full description of each opening.
+returns the full description of each opening. The only date is `updated_at`: there is no creation
+date, so a board-wide update stamps every opening with the same day.
 
 ## Fill
 

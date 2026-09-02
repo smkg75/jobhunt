@@ -30,6 +30,11 @@ Information" textarea, an EEO survey, and the submit button.
 The location combobox stores GUID values behind its labels: write the text with `form_input`, then
 pick the matching suggestion so the value is bound.
 
+`createdAt` in the API is the date the posting was created, not the date it was last published: a
+posting created eighteen months ago can still sit on the board and be listed as fresh by a job
+board. Freshness read from `createdAt` is a floor, not the truth; a posting the board still lists is
+noted as such in the reason line.
+
 ## Last tested
 
 never

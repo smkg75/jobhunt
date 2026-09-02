@@ -11,6 +11,8 @@ URL says which, and the file says how its form behaves.
 | Teamtailor | `ats/teamtailor.md` | `<slug>.teamtailor.com/jobs`, `careers.<company>.com/jobs/<id>-<slug>` |
 | Ashby | `ats/ashby.md` | `jobs.ashbyhq.com/<slug>` |
 | Workable | `ats/workable.md` | `apply.workable.com/<slug>` |
+| Rippling | `ats/rippling.md` | `ats.rippling.com/<slug>/jobs` |
+| Deel | `ats/deel.md` | `jobs.deel.com/<slug>` |
 | Recruitee | `ats/recruitee.md` | `<slug>.recruitee.com/o/<job-slug>` |
 
 ## Skeleton
