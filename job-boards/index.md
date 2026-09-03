@@ -44,7 +44,9 @@ company's own form instead, that form is an ATS: `ats/index.md`.
 
 **Traps** — what breaks on this board and the gesture that avoids it.
 
-**Last tested** — the date the file was last exercised against the live site, or `never`.
+**Last tested** — the date the file was last exercised against the live site, or `never`, and what
+was exercised. Never the employer, the role or the posting URL: this file records the board, not
+where the candidate applied. Those belong in `DATA_DIR`.
 
 ## Adding a board
 

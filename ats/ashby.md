@@ -86,5 +86,5 @@ writing an answer to it.
 
 ## Last tested
 
-2026-09-02 — an employer, VP Revenue (`jobs.ashbyhq.com/<slug>`), and an employer, Account
-Executive EMEA (`jobs.ashbyhq.com/<slug>`), single-page forms filled end to end, not submitted.
+2026-09-02 — two single-page forms on `jobs.ashbyhq.com/<slug>`, filled end to end, not
+submitted.

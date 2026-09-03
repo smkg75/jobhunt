@@ -46,7 +46,7 @@ link it: reach it from the company's website, whose careers link ("On recrute !"
 lands on the ATS. That ATS URL, not the Indeed one, is the durable URL of the posting.
 
 A posting's publication date on Indeed can be later than the one its ATS shows, the board reposting
-an older offer: an employer read 25 August 2026 on Indeed and 20 July 2026 on Taleez. The
+an older offer: one posting read 25 August 2026 on Indeed and 20 July 2026 on its ATS. The
 ATS date is the one § Freshness reads.
 
 ## Last tested

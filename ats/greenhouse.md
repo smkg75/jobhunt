@@ -82,7 +82,6 @@ both read as `""`; the chosen values sit in the sibling `[class*=single-value]` 
 
 ## Last tested
 
-2026-09-03 — an employer, AI Engineer (`job-boards.greenhouse.io/<slug>/jobs/<id>`), single-page
-form on the posting page itself, resume and cover letter both attached, filled end to end, not
-submitted. Earlier: 2026-09-02, an employer, Enterprise Account Executive - EMEA
-(`job-boards.greenhouse.io/<slug>/jobs/<id>`).
+2026-09-03 — a single-page form on the posting page itself
+(`job-boards.greenhouse.io/<slug>/jobs/<id>`), resume and cover letter both attached, filled end to
+end, not submitted. Earlier: 2026-09-02, another posting on the same host.

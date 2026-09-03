@@ -61,7 +61,9 @@ refused path means starting the session from `DATA_DIR`.
 
 **Traps** — what breaks on this ATS and the gesture that avoids it.
 
-**Last tested** — the date the file was last exercised against a live form, or `never`.
+**Last tested** — the date the file was last exercised against a live form, or `never`, and what
+was exercised. Never the employer, the role or the posting URL: this file records the ATS, not where
+the candidate applied. Those belong in `DATA_DIR`.
 
 ## Adding an ATS
 

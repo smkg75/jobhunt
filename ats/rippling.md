@@ -19,7 +19,7 @@ page carries its data as structured JSON (creation date `createdOn`, no separate
 
 ## Traps
 
-? — none met yet. Seen on an employer (`<slug>`), 2026-09-02, reading only.
+? — none met yet: the ATS has only been read so far, on 2026-09-02.
 
 ## Last tested
 

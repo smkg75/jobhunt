@@ -29,7 +29,7 @@ confirms it.
 
 `https://<slug>.recruitee.com/api/offers/` — keyless, JSON, one entry per open offer. One offer:
 `https://<slug>.recruitee.com/api/offers/<job-slug>`. Each entry carries the office address, a
-`remote` boolean and the publication date. Slugs seen: `<slug>`, `<slug>`.
+`remote` boolean and the publication date. Slugs already seen live in `DATA_DIR/companies.md`.
 
 ## Fill
 
@@ -63,11 +63,11 @@ for hCaptcha security challenge" while nothing renders on screen. Nothing to sol
 challenge can surface when the submit button is clicked, so a `draft` run must warn the candidate
 that it may appear under their own click.
 
-**`remote: true` next to a city is not a contradiction the API resolves**: an employer lists
-Paris as the city, `Remote job` as the location and `remote: true` on the same offer, and the page
-header shows "Paris (France)". The real location is a question for the first exchange, not a fact the
-row settles. `remote: false` with a foreign address does settle it: the an employer role that
-hiring.cafe listed in Paris was a London on-site role on this API.
+**`remote: true` next to a city is not a contradiction the API resolves**: one offer listed Paris
+as the city, `Remote job` as the location and `remote: true` at once, its page header showing
+"Paris (France)". The real location is a question for the first exchange, not a fact the row
+settles. `remote: false` with a foreign address does settle it: a role hiring.cafe listed in Paris
+was a London on-site role on this API.
 
 **No "Apply with LinkedIn" button and no profile import**, at least on the forms met so far: the
 identity fields are filled by hand.
@@ -77,6 +77,5 @@ each required field holding a sibling "This field is required and can not be lef
 
 ## Last tested
 
-2026-09-02 — an employer, Account Executive Enterprise France
-(`<slug>.recruitee.com`), form reached at `/c/new` and filled end to end, six fields plus the
-resume upload, not submitted.
+2026-09-02 — form reached at `<slug>.recruitee.com/c/new` and filled end to end, six fields plus
+the resume upload, not submitted.

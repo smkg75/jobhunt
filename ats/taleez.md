@@ -72,10 +72,9 @@ presque ! » : Taleez e-mails a confirmation link to the candidate's address and
 « obligatoire pour valider votre candidature ». Until it is clicked the status is `sent (unconfirmed)`;
 the mail (`no-reply@taleez.com`, « Confirmez votre candidature pour <role> ») arrives within the
 minute, and its `taleez.com/apply/confirm/<uuid>` link opened in the browser answers « Candidature
-bien reçue ! » — that page is the confirmation to read (an employer, 2026-09-02).
+bien reçue ! » — that page is the confirmation to read (2026-09-02).
 
 ## Last tested
 
-2026-09-02 — an employer, Team Leader Sales B2B
-(`<slug>.taleez.com`), form reached at `/applying` and filled end to end: five identity
+2026-09-02 — form reached at `<slug>.taleez.com/applying` and filled end to end: five identity
 fields, three custom questions, a resume upload, a date and a closed dropdown, not submitted.
