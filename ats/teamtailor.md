@@ -54,6 +54,6 @@ pool opt-in and stays unticked.
 
 ## Last tested
 
-2026-09-03 — a form on a branded domain, thirteen custom questions plus the
-identity block and a cover letter textarea, filled end to end on `/applications/new`, not
-submitted. Earlier: 2026-09-02.
+2026-09-03 — a form on a branded domain, thirteen custom questions plus the identity block and a
+cover letter textarea, filled end to end on `/applications/new`, not submitted. Earlier:
+2026-09-02.

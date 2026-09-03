@@ -98,7 +98,8 @@ Write one file on the skeleton its index defines, then add its row there — `jo
 
 ## Credit
 
-Forked from Proficiently's Claude skills plugin (MIT).
+Forked from Proficiently's Claude skills plugin (MIT) —
+[proficientlyjobs/proficiently-claude-skills](https://github.com/proficientlyjobs/proficiently-claude-skills).
 
 ## License
 

@@ -44,5 +44,5 @@ noted as such in the reason line.
 
 ## Last tested
 
-2026-09-03 — a single-page form on `jobs.lever.co/<slug>` with six
-custom question cards, filled end to end, not submitted.
+2026-09-03 — a single-page form on `jobs.lever.co/<slug>` with six custom question cards, filled
+end to end, not submitted.

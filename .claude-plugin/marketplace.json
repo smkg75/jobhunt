@@ -7,7 +7,7 @@
     {
       "name": "jobhunt",
       "source": "./",
-      "version": "0.1.24",
+      "version": "0.1.25",
       "description": "Searches job boards, scores postings, tailors the resume and cover letter, and fills the application form",
       "license": "MIT"
     }
