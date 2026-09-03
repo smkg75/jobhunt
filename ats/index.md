@@ -16,6 +16,27 @@ URL says which, and the file says how its form behaves.
 | Recruitee | `ats/recruitee.md` | `<slug>.recruitee.com/o/<job-slug>` |
 | Taleez | `ats/taleez.md` | `taleez.com/apply/<job-slug>`, `<slug>.taleez.com` |
 
+## Replacing a file already attached
+
+A resume rebuilt from the same source keeps its file name, and often its byte size to the byte: on
+2026-09-03 nine tailored resumes were recompiled with a single word changed and every PDF came out
+the exact size it was before. So neither the name shown on screen nor `files[0].size` proves that a
+replacement went through. Whatever the ATS, the only proof is the transition:
+
+1. read the current state,
+2. detach the file and **confirm the `input[type=file]` came back and is empty**,
+3. upload,
+4. confirm the file name is displayed again — and, where the ATS swallows the input after an
+   upload, that the input has disappeared once more.
+
+Steps 2 and 4 together are what proves a fresh upload happened. On Ashby and Lever the input
+survives the upload and holds the `File` object, so reading `files[0].name` back is enough. On
+Greenhouse and Teamtailor the input is removed and replaced by a pill, and the detach-then-reattach
+dance is the only way to be sure.
+
+Never leave a form with no resume attached: if a detach succeeds and the re-upload fails, say so
+first and plainly.
+
 ## Skeleton
 
 Every ATS file is `# <ATS>` followed by these six headings.
