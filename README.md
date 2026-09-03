@@ -41,6 +41,9 @@ The install is a copy, refreshed only when the version changes. `git config core
 once in the checkout: every commit then bumps the patch version, and `claude plugin update
 jobhunt@jobhunt` picks the new copy up.
 
+[`DECISIONS.md`](DECISIONS.md) holds the arbitrages the method rests on, each with the reason that
+settled it, and the holes left open on purpose. Read the entry before changing what it settles.
+
 ## The data directory
 
 ```
