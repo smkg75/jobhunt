@@ -7,6 +7,13 @@ the one a contributor is most likely to restore.
 
 What is deliberately left undone sits at the end, under [Deferred](#deferred).
 
+**Writing an entry.** The reason is what was observed, never where it was observed. No employer, no
+role title, no posting URL, no person: the same rule the platform files carry, and for the same
+reason. "A pass declined the button on the strength of the old note here, and the candidate had to
+click it himself" carries everything the next contributor needs; naming the company adds nothing to
+it and makes the repository unpublishable. Facts about the search itself live in `DATA_DIR`, which
+is where the detail of a given application belongs.
+
 ## The plugin
 
 **The plugin holds the method only** · 2026-09-01
