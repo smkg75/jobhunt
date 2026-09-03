@@ -91,6 +91,14 @@ and those facts already live in `DATA_DIR`. The history was rewritten the same d
 names it had already carried, and the remote repository recreated, because a force-push leaves the
 old objects served by SHA.
 
+**The repository is written as if it were already public** · 2026-09-03
+It is private today and may not stay that way. Every file and every commit message is written for a
+stranger who will read it out of context: no employer, no role title, no posting URL, no person, and
+none of the author's own clients or entities. A commit that says which client's session a pass ran
+in tells a reader something about the author rather than something about the method, and it is the
+kind of line that reads badly years later. What is worth keeping from a real exercise is the date
+and what was exercised.
+
 ## Setup and the data directory
 
 **Setup is one skill with the grill inside it** · 2026-09-01
