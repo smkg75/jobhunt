@@ -141,6 +141,20 @@ doubt is left, that doubt is named on the reason line, and `run` files every `Me
 "To validate", one question per line. It is what the candidate is asked, not what the skill
 half-decided.
 
+**An unstated package is a reservation, not a doubt** · 2026-09-06
+An earlier reading held every posting that published no range at `Medium`. One automatic pass scored
+twenty-seven postings on that rule and returned a single `High` — seven `Medium` were held on the
+package alone — and the candidate then applied to five of what the pass had set aside. A floor lives
+in `preferences.md` and the figure is put at the first exchange, so a silent package decides nothing:
+it goes on the reason line and the verdict stands.
+
+**A gap that can be said in one sentence is a `Medium`** · 2026-09-06
+A missing must-have used to send a posting to `Low`. But the letter's whole method is to name the gap
+in its opening lines, and the candidate has applied to postings the pass had dropped for years of
+experience, a sector of origin or a tool never used. `Low` now means the posting describes another
+job, a day-to-day no sentence closes. What a sentence can carry is a question for the candidate,
+which is what `Medium` is for.
+
 **A `High` also requires looking at the company** · 2026-09-01
 No dealbreaker, every must-have met, at least two nice-to-haves, and the company itself examined:
 size, sector, reviews, salary range where a board gives one. The numeric bar lives in the

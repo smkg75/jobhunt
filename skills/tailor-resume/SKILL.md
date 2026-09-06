@@ -45,7 +45,7 @@ The `src` column names a source file in `DATA_DIR/resume/`:
 
 1. Copy that one file into the folder's `tailored-resume/` — flat, same file name, source alone.
 2. Rewrite the content of the copy following `scripts/tailor-resume.md`.
-3. Run the `build:` line of `DATA_DIR/index.md` inside `tailored-resume/`, with the copied file name in place of `<src>`. The PDF lands beside the source under the name in the `output` column.
+3. Run the `build:` line of `DATA_DIR/index.md` inside `tailored-resume/`, with the copied file name in place of `<src>`. The PDF lands beside the source under the name in the `output` column. The build can outrun the tool's timeout: launch it in the background, carry on writing, and read the PDF back once it has landed.
 4. Read the page count of both PDFs with `pdfinfo <file>` (its `Pages:` line), the built one and the canonical in `DATA_DIR/resume/`. Longer than the canonical: cut the bullets that answer nothing in `## Match`, and build again until the counts are equal.
 
 The `src` column is empty (the canonical exists as a PDF only): write the tailored resume as `tailored-resume/resume.md`, with the sections of the canonical.

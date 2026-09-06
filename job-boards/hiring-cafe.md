@@ -7,8 +7,21 @@ postings that never reach the large boards.
 
 ## Search
 
-`https://hiring.cafe` — search by role, then apply the date and location filters. Read the result
-list by targeted extraction.
+`https://hiring.cafe` — one query per role. Set the location and date filters once through the UI, the
+date at the bound of `DATA_DIR/preferences.md` § Freshness, then reuse the `searchState` they write and
+swap only `searchQuery`; see § Traps. Undated, a broad title returns several hundred rows that
+§ Freshness then discards one by one.
+
+**Never `get_page_text` on a result page** — it returns the whole page and blows out the context of the
+pass reading it. Extract the rows:
+
+```javascript
+Array.from(document.querySelectorAll('[class*="job"], [class*="listing"], [class*="card"], tr, [role="listitem"]'))
+  .slice(0, 50).map(el => el.innerText.trim())
+  .filter(t => t.length > 20 && t.length < 500).join('\n---\n')
+```
+
+No match: screenshot the page, write a selector against what it shows, and fall back to `read_page`.
 
 ## Read a posting
 
@@ -47,4 +60,4 @@ returned sixty-four. Drop the qualifier before concluding the board is empty.
 
 ## Last tested
 
-2026-09-02
+2026-09-06 — eight queries by `searchState` navigation, no date filter set

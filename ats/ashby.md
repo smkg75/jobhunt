@@ -11,9 +11,13 @@ the posting URL suffixed with `/application`, reachable directly, no click neede
 
 ## Read a company's openings
 
-`https://api.ashbyhq.com/posting-api/job-board/<slug>` — keyless. `publishedAt` is the publication
-date, `descriptionPlain` the full posting text, `workplaceType` (OnSite / Hybrid / Remote) the
-location policy; `compensation` is often null even when the text states a range.
+`https://api.ashbyhq.com/posting-api/job-board/<slug>?includeCompensation=true` — keyless.
+`publishedAt` is the publication date, `descriptionPlain` the full posting text, `workplaceType`
+(OnSite / Hybrid / Remote) the location policy.
+
+**The parameter is not optional.** Without it `compensation` comes back null on a posting that
+publishes a range, and the pass scores a stated package as unstated. The range also sits at the
+very bottom of `descriptionPlain`: read the field whole, never a window of it.
 
 ## Fill
 

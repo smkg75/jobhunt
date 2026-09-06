@@ -26,11 +26,13 @@ Read:
 
 Tracked companies come before any board.
 
-Every row of `companies.md` whose `last visit` is older than seven days: read its openings through `ats/<name>.md` § Read a company's openings. A row with a blank `ATS` or `slug` is read from its `careers URL`, which is the authority — recognize the platform against `ats/index.md` and fill both columns in passing.
+A row whose ATS publishes a keyless API is read **on every pass**: it costs one call, and it is the source that converts. The seven-day rule on `last visit` holds only for the rows that need the browser.
+
+Read the openings through `ats/<name>.md` § Read a company's openings. A row with a blank `ATS` or `slug` is read from its `careers URL`, which is the authority — recognize the platform against `ats/index.md`, § Finding the ATS of a company when nothing is known, and fill both columns in passing.
 
 Each opening joins the raw list with the company as its source. Redate `last visit` to today and refresh `last role seen` on every row you read, whether or not it was hiring.
 
-Done when every row older than seven days is read and redated.
+Done when every row due this pass is read and redated.
 
 ## Step 2 — Work the boards
 

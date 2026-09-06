@@ -49,6 +49,11 @@ A posting's publication date on Indeed can be later than the one its ATS shows, 
 an older offer: one posting read 25 August 2026 on Indeed and 20 July 2026 on its ATS. The
 ATS date is the one § Freshness reads.
 
+`get_company_data` matches on the name alone and answers on the first company that carries it
+anywhere in the world: asked about a Paris RegTech, it returned a New Zealand peer-to-peer lender of
+the same name, reviews and salaries included. Check the country and the sector of what comes back
+before the company look a `High` requires rests on it.
+
 ## Last tested
 
-2026-09-02
+2026-09-06 — twelve searches, two returning nothing, one homonym on `get_company_data`

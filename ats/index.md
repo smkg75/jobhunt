@@ -3,6 +3,10 @@
 One file per ATS, all built on the same skeleton. A posting's apply link lands on one of these; the
 URL says which, and the file says how its form behaves.
 
+The ATS is read off the page that serves the form, never inferred from a domain that happens to
+resolve: a company whose name answered on a careers-platform subdomain was recorded as filing through
+that platform, and files through a house form.
+
 | ATS | File | URL pattern |
 |---|---|---|
 | Greenhouse | `ats/greenhouse.md` | `boards.greenhouse.io/<slug>`, `job-boards.greenhouse.io`, any page holding `grnhse_iframe` |
@@ -15,6 +19,31 @@ URL says which, and the file says how its form behaves.
 | Deel | `ats/deel.md` | `jobs.deel.com/<slug>` |
 | Recruitee | `ats/recruitee.md` | `<slug>.recruitee.com/o/<job-slug>` |
 | Taleez | `ats/taleez.md` | `taleez.com/apply/<job-slug>`, `<slug>.taleez.com` |
+| House form | `ats/house-form.md` | no pattern above matches; the employer's own domain serves the form |
+
+## Finding the ATS of a company
+
+A company whose `ATS` and `slug` columns are blank in `DATA_DIR/companies.md`: probe the keyless
+endpoints of the § Read a company's openings sections against its slug, all at once. Only a `200`
+answers, and it names the ATS.
+
+```bash
+for s in acme othercorp; do
+  for u in "https://boards-api.greenhouse.io/v1/boards/$s/jobs" \
+           "https://api.ashbyhq.com/posting-api/job-board/$s" \
+           "https://api.lever.co/v0/postings/$s?mode=json" \
+           "https://$s.teamtailor.com/jobs"; do
+    [ "$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 8 "$u")" = 200 ] && echo "$s -> $u"
+  done
+done
+```
+
+`--max-time` is not optional: one endpoint that hangs holds the whole pass. The list of URLs is
+whatever the ATS files carry — an endpoint added to one of them belongs in this loop too, and an ATS
+reachable several ways lists them all in its own file.
+
+A slug that answers nowhere proves nothing about the ATS: the slug is usually the wrong guess, and
+the careers page is what settles it. What the probe finds fills both columns in passing.
 
 ## Replacing a file already attached
 
