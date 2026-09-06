@@ -12,7 +12,7 @@ structured fields, and never hits a captcha. The browser serves the boards that 
 |---|---|---|---|
 | Indeed | `job-boards/indeed.md` | MCP `mcp__claude_ai_Indeed__*` | 1 |
 | hiring.cafe | `job-boards/hiring-cafe.md` | Browser, no account | 2 |
-| Welcome to the Jungle | `job-boards/wttj.md` | Browser, sign-in required | 3 |
+| Welcome to the Jungle | `job-boards/wttj.md` | Browser, sign-in required, sub-agent | 3 |
 | LinkedIn Jobs | `job-boards/linkedin.md` | Browser, sign-in required | 4 |
 
 ## Skeleton
@@ -21,6 +21,10 @@ Every board file is `# <Board>` followed by these six headings.
 
 **Access** — MCP, API or browser; whether an account is required; how to tell the session is signed
 in. A board that needs an account and shows none is a source that is down: name it and move on.
+
+A browser board whose listings are heavy, or whose entry points have moved, says **sub-agent** here
+and is worked through `skills/job-search/scripts/browse-board.md`. The sub-agent returns rows and a
+board report; its probing never enters the pass's context.
 
 **Search** — the queries the board accepts, its URL patterns, its date and location filters, and any
 extraction the list needs. Reading a result list is the same gesture everywhere: `javascript_tool`

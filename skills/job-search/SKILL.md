@@ -36,6 +36,8 @@ Done when every row older than seven days is read and redated.
 
 Read `job-boards/index.md` and take the active boards in the order it gives. Each board's own file carries its access, its query syntax and its list extraction; follow it. A board reached through the browser opens per `shared/references/browser-setup.md`.
 
+A board whose § Access says **sub-agent** is dispatched to one, following `scripts/browse-board.md`, with that board's file and this pass's queries. It returns rows and a board report; the rows join the raw list, and the report feeds the "what broke" block. Two such boards never run at once — they share one browser.
+
 Queries are each `Target roles` entry × `Location`, phrased differently from the queries recorded under the previous `## YYYY-MM-DD — run` heading in `job-history.md` § Runs, and bounded by `preferences.md` § Query rules. `$ARGUMENTS`, when the candidate gives one, replaces the role list for this pass.
 
 A raw posting is: company, role, URL, posted date, source.
