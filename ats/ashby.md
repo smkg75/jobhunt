@@ -82,9 +82,13 @@ here: scroll and screenshot the whole form to read them.
 question comes back cut mid-word. Read the form container's `innerText` for the full wording before
 writing an answer to it.
 
+**The Phone field takes `form_input` and drops it.** The value appears in the input, the DOM shows
+it, and the submit fails on "Missing entry for required field: Phone". React never registered the
+change. Type that field on the keyboard instead, and read it back from the DOM before submitting —
+the other text fields do accept `form_input`, so this one looks like it worked.
+
 **An invisible reCAPTCHA sits in the footer.** Nothing to solve, it only fires on submit.
 
 ## Last tested
 
-2026-09-02 — two single-page forms on `jobs.ashbyhq.com/<slug>`, filled end to end, not
-submitted.
+2026-09-06 — application sent, single-page form, Phone trap found
