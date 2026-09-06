@@ -46,6 +46,14 @@ element tell you its type.
 **A date question is a native date input**, not a free-text field: "What could be your potential
 start date?" only takes an ISO value. A sentence such as "available immediately" cannot go in.
 
+**A successful upload empties `input[type=file]`.** Teamtailor ships the file, then clears the
+input, so `input.files.length` reads 0 on a resume that is correctly attached. The attachment shows
+as a chip carrying the file name, and `candidate[resume_remote_url]` is filled once the upload lands:
+check those two, never the input.
+
+**The cookie banner ignores a `ref` click.** The click reports success and the banner stays,
+covering the form. Click "Decline all non-necessary" at its coordinates, before anything is typed.
+
 **The consent checkbox sits behind a Rails hidden twin.** `input[name="candidate[consent_given]"]`
 matches a hidden input with value `0` first, so `querySelector(...).checked` returns false while the
 real box is ticked. Filter on `input[type=checkbox]`. Two consents exist and they are not the same:
@@ -54,6 +62,6 @@ pool opt-in and stays unticked.
 
 ## Last tested
 
-2026-09-03 — a form on a branded domain, thirteen custom questions plus the identity block and a
-cover letter textarea, filled end to end on `/applications/new`, not submitted. Earlier:
-2026-09-02.
+2026-09-06 — three applications submitted end to end on `/applications/new` (branded domains),
+cover letter as a textarea with no maxlength, upload and cookie-banner traps found. Earlier:
+2026-09-03, 2026-09-02.
