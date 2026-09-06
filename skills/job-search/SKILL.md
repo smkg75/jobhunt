@@ -97,7 +97,9 @@ Queries: <one line per query>
 
 Every posting seen takes a row, `Skip` included, its reason in `notes`.
 
-Done when: the run block holds one row per posting seen, Skips included.
+§ Runs holds the newest block only: the one it replaces moves to `DATA_DIR/runs/<YYYY-MM-DD>.md`, whole, and takes a line in the table at the head of the section. A run block runs to twenty kilobytes, and every sub-agent of the next pass would otherwise read them all.
+
+Done when: the run block holds one row per posting seen, Skips included, and the block it replaced sits in `runs/`.
 
 ## Step 9 — Report
 

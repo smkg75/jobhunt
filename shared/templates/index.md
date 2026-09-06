@@ -13,7 +13,8 @@ body is written in whatever language the candidate works in.
 | `profile.md` | the career, the evidence, the figures |
 | `preferences.md` | what to look for, what to skip, how far to go |
 | `application-data.md` | form fields and answers already written |
-| `job-history.md` | applications, search runs, earlier rejections |
+| `job-history.md` | applications, the newest search run, earlier rejections |
+| `runs/` | the earlier search runs, one file per pass |
 | `companies.md` | companies followed and their ATS |
 | `linkedin-contacts.csv` | the LinkedIn connections export |
 | `resume/` | one canonical resume per language, source and output side by side |

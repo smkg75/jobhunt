@@ -9,8 +9,9 @@ one of the statuses `shared/templates/applied.md` defines._
 | | | | | | | |
 
 ## Runs
-_One block per search pass, headed `## YYYY-MM-DD — run`. `Source` names the pass that wrote it,
-`Queries` the queries it used; the table holds every posting seen, Skips included with their reason._
+_The newest block only, headed `## YYYY-MM-DD — run`. `Source` names the pass that wrote it,
+`Queries` the queries it used; the table holds every posting seen, Skips included with their reason.
+Earlier blocks live one per file in `runs/`, and a table at the head of this section lists them._
 
 ## YYYY-MM-DD — run
 
