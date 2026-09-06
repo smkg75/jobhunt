@@ -59,8 +59,10 @@ run without the candidate: close that tab and fill by hand.
 flag and "+33" once chosen; residence comes from "Location (City)".
 
 **Country, "Location (City)" and single-select custom questions are react-select comboboxes.**
-`form_input` does not settle them: click the field by `ref`, type the start of the value, then click
-the option at its coordinates. Afterwards the value is **not** in `input.value`, which stays empty:
+`form_input` does not settle them, and on the 2026-09-06 render **a `ref` click did not open the menu
+either** — the click reported success and nothing dropped down. Click the field at its
+**coordinates**, which opens it; from there the keyboard finishes the job, Return taking the first
+option and Down then Return the second. Clicking the option at its coordinates works too. Afterwards the value is **not** in `input.value`, which stays empty:
 read it in the sibling `div.select__single-value`, or on screen. "Location (City)" can list the same
 city twice, and its selection fills a hidden latitude and longitude.
 
@@ -82,6 +84,4 @@ both read as `""`; the chosen values sit in the sibling `[class*=single-value]` 
 
 ## Last tested
 
-2026-09-03 — a single-page form on the posting page itself
-(`job-boards.greenhouse.io/<slug>/jobs/<id>`), resume and cover letter both attached, filled end to
-end, not submitted. Earlier: 2026-09-02, another posting on the same host.
+2026-09-06 — application sent on a single-page `job-boards` form, 24 fields, react-select needs a coordinate click
