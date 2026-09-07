@@ -1,15 +1,15 @@
 # Applied
 
 The shape of `applied.md`, one per application, inside its job folder. Written by `apply` as each
-fact comes out.
+fact comes out, and never rewritten afterwards: everything here is immutable. Its status is not one
+of these fields — it is read from `DATA_DIR/job-history.md` § Journal, this folder's last line
+there.
 
 ```markdown
 Date: YYYY-MM-DD
 Channel: <board or ATS>
 Send mode: draft | auto-submit
-Status: sent | sent (unconfirmed) | ready to submit | to validate | archived
-Reason: <the blocker when the status is `to validate`, and any note carried by the application, such
-as `resume language ≠ posting language`>
+Reason: <a note carried by the application, such as `resume language ≠ posting language`>
 Confirmation: <what the confirmation screen or mail said>
 Resume: tailored | canonical
 
@@ -18,5 +18,5 @@ Resume: tailored | canonical
 One dated line per reply received.
 ```
 
-`archived` is a folder closed without an application: the posting withdrawn, or the candidate dropped
-it. The folder stays.
+A folder archived before it was ever filled may hold no `applied.md` at all — its only record is the
+`archived` line in § Journal. No folder is ever deleted.

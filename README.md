@@ -14,7 +14,7 @@ directory outside it.
 | `/jobhunt:job-search` | keywords, optional | a pass table in `job-history.md` § Runs, and `posting.md` under `jobs/` for every High |
 | `/jobhunt:tailor-resume` | a posting URL, `last` or `current` | `posting.md` § Match and the built resume in `tailored-resume/` |
 | `/jobhunt:cover-letter` | a posting URL, `last` or `current` | `cover-letter/cover-letter.md`, plus the letter on the candidate's template as a PDF when the form wants a file |
-| `/jobhunt:apply` | a posting URL, `last` or `current` | the form filled, `answers.md`, `applied.md`, a line in `job-history.md` § Applications |
+| `/jobhunt:apply` | a posting URL, `last` or `current` | the form filled, `answers.md`, `applied.md`, a line in `job-history.md` § Applications and one in § Journal |
 | `/jobhunt:network-scan` | a contact count, or `all` (default 25) | openings at the companies of the candidate's LinkedIn contacts, logged in `job-history.md` § Runs |
 | `/jobhunt:run` | keywords, optional | a search pass, then an application for every High, and a four-block report in `state.md` § Last run |
 
@@ -53,7 +53,7 @@ DATA_DIR/
 ├── profile.md                  roles, evidence, metrics bank, letter rules, open gaps
 ├── preferences.md              what to look for, what to skip, how far to go
 ├── application-data.md         form sheet, answers already written
-├── job-history.md              applications, search runs, earlier rejections
+├── job-history.md              applications, the journal, search runs, earlier rejections
 ├── companies.md                companies followed, their ATS and careers URL
 ├── linkedin-contacts.csv       LinkedIn connections export (optional)
 ├── resume/                     canonical resumes, one per language, flat
@@ -69,7 +69,7 @@ DATA_DIR/
         ├── tailored-resume/    the chosen source and its built output
         ├── cover-letter/       cover-letter.md, plus the filled template and its PDF when a file is wanted
         ├── answers.md          question, answer, source
-        └── applied.md          date, channel, send mode, status, replies
+        └── applied.md          date, channel, send mode, confirmation, replies
 ```
 
 ## Boards and ATS covered

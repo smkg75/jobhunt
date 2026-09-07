@@ -210,8 +210,8 @@ return only the good ones. One scoring authority, and gaps stay gaps.
 **Send mode alone decides the last gesture** · 2026-09-01
 `preferences.md § Send mode` is the whole draft-versus-send distinction: `draft` fills everything
 and submits nothing; `auto-submit` submits and reads the confirmation back, giving `sent` or, with
-nothing read back, `sent (unconfirmed)`. Upstream demanded a human confirmation before every
-submit, which a hands-off run cannot carry. `sent (unconfirmed)` exists so an unread confirmation
+nothing read back, `sent-unconfirmed`. Upstream demanded a human confirmation before every
+submit, which a hands-off run cannot carry. `sent-unconfirmed` exists so an unread confirmation
 is never reported as a send.
 
 **The skill answers nothing personal on the candidate's behalf** · 2026-09-01
@@ -219,7 +219,7 @@ Upstream defaulted arbitration and terms to Accept, interview and transcription 
 the electronic signature to the candidate's full name, and every EEO field to Decline. All of it is
 inverted here: EEO rows stay empty until the candidate fills them, a signature is returned as
 `for the candidate`, and a required consent or EEO block left undecided suspends the application at
-`to validate`. This is the most tempting rule to "improve", and the one that must not move.
+`blocked`. This is the most tempting rule to "improve", and the one that must not move.
 
 **A closed list of what suspends an application** · 2026-09-01
 Test, video, salary below the floor, an account to create, a captcha or 2FA, a question whose
@@ -232,7 +232,7 @@ Upstream's present-approve-iterate conversations were removed from both document
 on a report: what moved to the front and why, the proofs the letter leans on, any evidence-less
 must-have, the paths written. No per-field question reaches the candidate. A skill that stops to
 ask about tone stalls the chain; what the candidate would have corrected is caught by the proof
-map, the `to validate` status and the correction write-back.
+map, the `blocked` event and the correction write-back.
 
 **The chain runs in one imposed order** · 2026-09-01
 Form scouted whole, resume tailored with the form's custom questions as extra requirements, letter
@@ -264,8 +264,21 @@ asked the user to sign in and say "continue"; a hands-off run has nobody to wait
 
 **A folder is never deleted** · 2026-09-01
 `archived` closes a folder without an application, the posting withdrawn or the candidate having
-dropped it, and the folder stays. It is one of the five statuses that must agree across
-`applied.md`, the history and the folder itself.
+dropped it, and the folder stays. It is one of the ten events of `job-history.md § Journal`, the
+folder's only status record (see "A single status source" below).
+
+**A single status source: the journal, not three writers** · 2026-09-07
+An audit that day found four folders where `applied.md`, `job-history.md § Applications` and
+`state.md` disagreed on the same application: three departed applications still read `ready to
+submit` in their own file, one rejected application still read `sent`. Nothing kept the three
+copies in sync, because `apply` step 11 wrote the same status three times. The status is now
+written nowhere but `job-history.md § Journal`, an append-only log of ten named events, one line
+per event, never edited or removed; a folder's status is its last line there. `applied.md` keeps
+only what never changes — what was sent, when, the pieces, the confirmation read on screen, any
+reservation — and `## Applications` keeps only a candidature's identity. `ack` and `reply` are kept
+apart on purpose: an ATS's automated acknowledgement is not the same signal as a human reply, and
+folding the two into one event would erase a distinction that reasoning about an application's
+liveness needs.
 
 ## The resume and the letter
 
@@ -296,7 +309,7 @@ contradict each other in front of the recruiter.
 **The proof map decides what the letter may claim** · 2026-09-01
 `cover-letter.md` carries `## Proof map` above `## Letter`: one line per requirement, as
 requirement, evidence, source, quality. A must-have with no evidence is written with its hole
-named, the application goes to `to validate`, and the letter claims nothing in its place. A gap
+named, the application goes to `blocked`, and the letter claims nothing in its place. A gap
 becomes a status the candidate can act on rather than a sentence that smooths it over.
 
 **No letter field, no letter** · 2026-09-01

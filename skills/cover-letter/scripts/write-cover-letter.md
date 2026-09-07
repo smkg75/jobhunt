@@ -14,7 +14,7 @@ Written first, above the letter. Take from `## Match` the requirements this lett
 requirement → evidence → source → quality (direct | analogous | transferable)
 ```
 
-Keep the lines the letter actually uses, plus every must-have of the posting. A must-have with no evidence, not even transferable, is written with its hole named: the application goes to `to validate` and the letter claims nothing in its place.
+Keep the lines the letter actually uses, plus every must-have of the posting. A must-have with no evidence, not even transferable, is written with its hole named: the application goes to `blocked` and the letter claims nothing in its place.
 
 ## Letter
 

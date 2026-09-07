@@ -6,7 +6,7 @@ argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for
 
 # Apply
 
-One application = a folder, a form read whole before anything is written, a tailored resume, a letter when the form asks for one, answers drawn from those two, a status, a record. In that order; each step ends before the next begins.
+One application = a folder, a form read whole before anything is written, a tailored resume, a letter when the form asks for one, answers drawn from those two, an event, a record. In that order; each step ends before the next begins.
 
 Conflicts between rules: `shared/references/priority-hierarchy.md`. Browser tab and session safety: `shared/references/browser-setup.md`.
 
@@ -85,7 +85,7 @@ One pass, through the `scripts/fill-page.md` subagent: the tab id, the field →
 
 Multi-page form: fill the page, advance the way `ats/<name>.md` describes, scout the new page as at step 4, fill again, until the review page.
 
-A field the subagent returns as failed after its two tries: its question and its answer go to `answers.md`, ready to paste, and the status stays `ready to submit`. A missed gesture is not a missing fact.
+A field the subagent returns as failed after its two tries: its question and its answer go to `answers.md`, ready to paste; it does not send the application to `blocked` at step 10. A missed gesture is not a missing fact.
 
 Done when: every field of `## Form` is filled, uploaded, or written into `answers.md`.
 
@@ -93,14 +93,14 @@ Done when: every field of `## Form` is filled, uploaded, or written into `answer
 
 `DATA_DIR/preferences.md` `## Send mode` decides the last gesture:
 
-- `draft` — everything filled, nothing submitted, tab closed. Status `ready to submit`. Mail channel: a Gmail draft (`create_draft`) — subject `Application - <role> - <candidate name>`, written in the posting's language (`Candidature - <poste> - <nom>` for a French posting), plain hyphens only; the letter as body, the tailored resume attached.
-- `auto-submit` — submit without asking. Read the confirmation on screen (`get_page_text`) or in the confirmation mail: status `sent`. No confirmation read: status `sent (unconfirmed)`. Mail channel: `send_message`, same subject, body and attachment.
+- `draft` — everything filled, nothing submitted, tab closed. Event `ready`. Mail channel: a Gmail draft (`create_draft`) — subject `Application - <role> - <candidate name>`, written in the posting's language (`Candidature - <poste> - <nom>` for a French posting), plain hyphens only; the letter as body, the tailored resume attached.
+- `auto-submit` — submit without asking. Read the confirmation on screen (`get_page_text`) or in the confirmation mail: event `sent`. No confirmation read: event `sent-unconfirmed`. Mail channel: `send_message`, same subject, body and attachment.
 
-Done when: the application carries one of `sent`, `sent (unconfirmed)`, `ready to submit`.
+Done when: the application's event is one of `sent`, `sent-unconfirmed`, `ready`.
 
 ## Step 10 — What suspends
 
-Status `to validate`, the reason named, the folder kept as it stands so the candidate resumes where it stopped:
+Event `blocked`, the reason named, the folder kept as it stands so the candidate resumes where it stopped:
 
 - technical or personality test,
 - video to record,
@@ -113,16 +113,17 @@ Status `to validate`, the reason named, the folder kept as it stands so the cand
 - an attachment that cannot be uploaded,
 - a signature asked for under `auto-submit`.
 
-Done when: no line of this list applies, or the status is `to validate` with one line naming the blocker.
+Done when: no line of this list applies, or the event is `blocked` with one line naming the blocker.
 
 ## Step 11 — Record
 
 Written the moment each fact comes out, never at the end of the run:
 
-- `applied.md` in the folder, on `shared/templates/applied.md`, which carries its fields and the full status set: `sent`, `sent (unconfirmed)`, `ready to submit`, `to validate`, `archived`.
-- one line in `DATA_DIR/job-history.md` `## Applications`: `date | company | role | channel | fit | status | folder`.
-- `DATA_DIR/state.md`: § Awaiting the candidate for what now waits on the candidate, § Open questions for the blocker when the status is `to validate`.
+- one line in `DATA_DIR/job-history.md` `## Journal`: `date | folder | event | detail`, the event named at step 9 or step 10. This is the only place a status is ever written.
+- one line in `DATA_DIR/job-history.md` `## Applications`: `date | company | role | channel | fit | folder` — the candidature's identity, never its status.
+- `applied.md` in the folder, on `shared/templates/applied.md`: what was sent, when, on what channel, the pieces attached, the confirmation read on screen, any reservation. Immutable — none of it is rewritten later.
+- `DATA_DIR/state.md`: § Awaiting the candidate for what now waits on the candidate, § Open questions for the blocker when the event is `blocked`.
 
 Nothing is paid for and no paid account is opened, at any step.
 
-Done when: the folder, `job-history.md` and `state.md` agree on one status. Report the company, the role, the channel, the status and the folder.
+Done when: the journal carries the event, `## Applications` carries the identity line, `applied.md` carries the immutable record, and `state.md` holds only what the candidate must still decide or answer. Report the company, the role, the channel, the event and the folder.

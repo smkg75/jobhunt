@@ -38,14 +38,14 @@ No cap - every `High` goes.
 An agent that comes back broken leaves its posting for the fourth block below, and the pass carries
 on to the next `High`.
 
-Done when: every `High` has come back `sent`, `sent (unconfirmed)`, `ready to submit` or
-`to validate`, or is named in the fourth block.
+Done when: every `High` has come back `sent`, `sent-unconfirmed`, `ready` or `blocked`, or is named
+in the fourth block.
 
 ## Step 3 — Report
 
 Four short blocks:
 
-1. **Sent** - one line per application: status (`sent`, `sent (unconfirmed)` or `ready to submit`),
+1. **Sent** - one line per application: event (`sent`, `sent-unconfirmed` or `ready`),
    company, role, channel, folder, and the LinkedIn contact when the search found one.
 2. **To validate** - every `Medium`, with the doubt that holds it named, and every `High` an apply
    agent suspended, with the reason it named. One question per line, no application filed for any of
