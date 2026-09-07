@@ -55,16 +55,43 @@ read again, or reach the field with `find`.
 (`my.greenhouse.io/users/sign_in?initiator=autofill`), asking for an email and an account. It cannot
 run without the candidate: close that tab and fill by hand.
 
-**The "Country" field beside "Phone" is the dialing code, not the country of residence.** It shows a
-flag and "+33" once chosen; residence comes from "Location (City)".
+**A custom-question field can be a single-line `input` capped at 255 characters, even when its
+question calls for a paragraph.** It renders as `class="input__single-line"` with `maxlength="255"`,
+and anything typed past the limit is dropped silently — no error, no truncation warning. Before
+writing a long answer, read the field's `maxlength` and class and measure the answer against it; if it
+overruns, compress it under the limit and carry the full version into an "Additional Information"
+field, which is a real, unlimited textarea.
 
-**Country, "Location (City)" and single-select custom questions are react-select comboboxes.**
-`form_input` does not settle them, and on the 2026-09-06 render **a `ref` click did not open the menu
-either** — the click reported success and nothing dropped down. Click the field at its
-**coordinates**, which opens it; from there the keyboard finishes the job, Return taking the first
-option and Down then Return the second. Clicking the option at its coordinates works too. Afterwards the value is **not** in `input.value`, which stays empty:
-read it in the sibling `div.select__single-value`, or on screen. "Location (City)" can list the same
-city twice, and its selection fills a hidden latitude and longitude.
+**The "Country" field beside "Phone" is the dialing code, not the country of residence** (residence
+comes from "Location (City)"), **and that Country+Phone block is an `intl-tel-input` widget, not a
+react-select** — it refuses any value set from JavaScript. The screen can show the right flag and the
+right number while the submission still fails on "Select a country" and "Phone is required". Drive it
+by hand instead: **click** the country selector, **type** the country name, click the matching option,
+then **type** the phone number on the keyboard.
+
+**That same widget swallows the `+` and any spaces.** Typing the number in international format
+(`+33 6 …`) comes out with the `+` stripped and the dial code re-prefixed, producing a wrong number.
+Type the **national format** instead — the local digits with the leading `0` — and the widget
+reformats it correctly under the chosen flag.
+
+**A validation error does not clear itself once the field is fixed.** "Select a country" or "Phone is
+required" can still show on screen after the correction: it is only re-evaluated on the next submit
+attempt. Don't read that as the fix having failed, and don't loop on re-fixing an already-correct
+field.
+
+**"Location (City)" and single-select custom questions are react-select comboboxes.** `form_input`
+does not settle them, and no coordinate click is needed either: call `element.focus()` in
+`javascript_tool`, then send **Down** (opens the menu and highlights the first option) and **Return**
+(commits it) — `Down Down Return` for the second option. Afterwards the value is **not** in
+`input.value`, which stays empty: read it in the sibling `[class*="single-value"]` node instead (e.g.
+`Paris, France`). "Location (City)" can list the same city twice, and its selection fills a hidden
+latitude and longitude.
+
+**A plain text field driven from `javascript_tool` needs the native setter, not `element.value =
+…`.** React ignores a direct assignment and keeps its own state regardless. Set it with
+`Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(element, value)`
+(`HTMLTextAreaElement.prototype` for a textarea), then dispatch a bubbling `input` event — that
+combination is what React's `onChange` actually picks up.
 
 **The fields carry an `id`, not a `name`.** `document.querySelector('input[name=first_name]')`
 returns nothing on this render; `#first_name`, `#last_name`, `#email`, `#phone`, `#country`,
@@ -76,12 +103,10 @@ reports every field as missing while the form is in fact filled.
 `input.files[0]` cannot be read back afterwards. Confirm an upload by the chip text, not by the
 input: the file names appear as leaf nodes ending in `.pdf` inside the form.
 
-**A react-select leaves its own input empty.** After picking, `#country` and `#candidate-location`
-both read as `""`; the chosen values sit in the sibling `[class*=single-value]` nodes, as `+33` and
-`Paris, France`. Read those.
-
 **An invisible reCAPTCHA sits in the footer.** Nothing to solve, it only fires on submit.
 
 ## Last tested
 
-2026-09-06 — application sent on a single-page `job-boards` form, 24 fields, react-select needs a coordinate click
+2026-09-07 — application submitted after a first rejected attempt: the intl-tel-input country+phone
+block and a 255-character custom-question cap were the two blockers; react-select now settles by
+keyboard focus, not a coordinate click.
