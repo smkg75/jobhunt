@@ -78,7 +78,6 @@ DATA_DIR/
 |---|---|
 | Indeed | `job-boards/indeed.md` |
 | Hiring.cafe | `job-boards/hiring-cafe.md` |
-| Welcome to the Jungle | `job-boards/wttj.md` |
 | LinkedIn | `job-boards/linkedin.md` |
 
 | ATS | File |

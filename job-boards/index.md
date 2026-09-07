@@ -12,8 +12,7 @@ structured fields, and never hits a captcha. The browser serves the boards that 
 |---|---|---|---|
 | Indeed | `job-boards/indeed.md` | MCP `mcp__claude_ai_Indeed__*` | 1 |
 | hiring.cafe | `job-boards/hiring-cafe.md` | Browser, no account | 2 |
-| Welcome to the Jungle | `job-boards/wttj.md` | Browser, sign-in required, sub-agent | 3 |
-| LinkedIn Jobs | `job-boards/linkedin.md` | Browser, sign-in required | 4 |
+| LinkedIn Jobs | `job-boards/linkedin.md` | Browser, sign-in required | 3 |
 
 ## Skeleton
 

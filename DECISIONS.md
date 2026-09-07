@@ -436,9 +436,10 @@ standing exceptions. Likewise, `network-scan` runs five browser readers at once 
 one form at a time on the grounds that two agents fight over the same Chrome; no commit reconciles
 the two.
 
-**A board ranked but unusable.** One board sits at rank 3 in the index and has rendered no result
-list since 2026-09-02; another has no usable application channel at all. Neither is demoted,
-because the rank records intent rather than current health.
+**A board ranked but unusable.** One board has no usable application channel at all and is not
+demoted, because the rank records intent rather than current health. The other case was closed on
+2026-09-07: a board that had rendered no result list since 2026-09-02 was removed outright rather
+than demoted, once four passes had established that its keyword search no longer exists.
 
 **`preferences.md § Sources & accounts` is read and then used by nobody.** The search pass reads it
 at step 0 and no later step consumes it; the index is the real authority on which boards run.
