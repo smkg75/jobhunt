@@ -65,6 +65,12 @@ them, then the option has to be clicked at its coordinates. The location list re
 twice, and offers the American homonyms below it, so "Paris, France" sits at rows one and two with
 Paris, Texas underneath.
 
+**The reverse also happens, so probe rather than assume.** On 2026-09-08 `Current location` was a
+plain `input[type=text]` with no suggestion list at all, while the salary field on the same form was
+a real combobox that **`input[type=text]` does not select**: it answers to `input[role=combobox]`. A
+sweep written on `input[type=text]` alone reports the salary field as absent and the location field
+as a combobox, both wrong. Type into the field and watch whether a list opens.
+
 **Typing filters a closed list down to what looks like free text.** "How did you hear about us?"
 took the word "Indeed" and showed a single option, "Job Board (Indeed, LinkedIn Jobs, etc.)". The
 value that registers is the option, never the typed text.
@@ -77,6 +83,13 @@ button is the submit button, so count the steps before using it.
 reports success on the two-button Yes/No control and on a radio option, and nothing is selected. The
 same click at the element's coordinates takes. Screenshot after each one: the selected state is the
 only proof, and a required toggle left unset blocks the submit silently.
+
+**Reading a radio back needs a walk up the tree, because every one of them carries `value="on"`.**
+The value attribute says nothing about which option it is, and the option label sits **one to three
+ancestors above** the input, not in a `label[for]`. Climb from the checked input until an ancestor's
+`innerText` is short (under about 60 characters) and that text is the answer, "Yes", "No", "Paris".
+Worth doing on a form with many radios: it reads every answer back in one `javascript_tool` call and
+costs nothing next to a screenshot per control.
 
 **Required fields carry a red asterisk on the label, and nothing marks the optional ones.** The
 accessibility tree does not carry that asterisk, so `read_page` cannot tell required from optional
@@ -93,6 +106,17 @@ the other text fields do accept `form_input`, so this one looks like it worked.
 
 **An invisible reCAPTCHA sits in the footer.** Nothing to solve, it only fires on submit.
 
+**The form persists nothing.** Checked on two companies on 2026-09-08: `localStorage` and
+`sessionStorage` carry only reCAPTCHA and a Datadog tab id, no draft. The state lives in the page's
+React alone, so **a reload empties every field and drops the uploaded resume**. A form filled but not
+submitted survives only as long as its tab. That matters when a pass fills a form it does not submit:
+the work is perishable, and whoever is meant to click has to be told not to reload the tab.
+
 ## Last tested
+
+2026-09-08 — two applications sent, both single-page forms. Found: the form persists nothing across a
+reload; radios all carry `value="on"` and read back by climbing the tree; a field can be a plain text
+input where the location combobox was expected, and the salary combobox answers to
+`input[role=combobox]`, not `input[type=text]`. One of the two forms had no Phone field at all.
 
 2026-09-06 — application sent, single-page form, Phone trap found
