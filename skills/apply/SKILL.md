@@ -1,7 +1,7 @@
 ---
 name: apply
 description: Fill one job application end to end, from the posting to the record.
-argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab"
+argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for the open tab; add 'hands-off' to be asked nothing"
 ---
 
 # Apply
@@ -9,6 +9,8 @@ argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for
 One application = a folder, a form read whole before anything is written, a tailored resume, a letter when the form asks for one, answers drawn from those two, an event, a record. In that order; each step ends before the next begins.
 
 The work of one application runs in a sub-agent, `scripts/apply-one.md`, one per application and one at a time. This file is the dispatcher's side: the target, the dispatch, the review before the last gesture, the record. The dispatcher's context holds the agent's reports — never the form, the resume source or the pages.
+
+**Hands-off** means nobody is asked, at any step: under `run`, or when the candidate said so at launch — `hands-off` after the argument, or in their own words. Otherwise one grouped question may reach the candidate, only where this file says so.
 
 Conflicts between rules: `shared/references/priority-hierarchy.md`.
 
@@ -22,7 +24,7 @@ Resolve the data directory per `shared/references/data-directory.md`, then check
 - `last` → the most recently modified job folder.
 - `current` → the form already open in the active tab; match its URL against the job folders to load the context, and keep the tab id for the dispatch.
 
-`DATA_DIR/application-data.md` `## Form sheet` absent: build it from the canonical resume, and ask the candidate one grouped question covering what the resume leaves open — work authorisation, sponsorship, notice, salary expectation, EEO — then save it. Under `run` there is nobody to ask: a field the resume leaves open surfaces at the review or suspends the application.
+`DATA_DIR/application-data.md` `## Form sheet` absent: build it from the canonical resume, and ask the candidate one grouped question covering what the resume leaves open — work authorisation, sponsorship, notice, salary expectation, EEO — then save it. Hands-off, there is nobody to ask: a field the resume leaves open surfaces at the review or suspends the application.
 
 Done when: the folder exists, and `## Form sheet` is on disk.
 
@@ -52,7 +54,7 @@ Check, with `DATA_DIR/profile.md` read once per pass:
 
 Answer by `SendMessage`: `go`, or the corrections, each naming the field, the bullet or the paragraph and the text to put there. The agent applies them, replaces the attachment when the resume changed, reads the form back again and returns a new `review`; the loop ends on `go`.
 
-A doubt the files cannot settle: outside `run`, one grouped question to the candidate, saying the tab is waiting; under `run`, nobody is asked — a doubt on a fact suspends the application (`blocked: <the question>` sent to the agent), a doubt on wording is settled here.
+A doubt the files cannot settle: one grouped question to the candidate, saying the tab is waiting. Hands-off, nobody is asked — a doubt on a fact suspends the application (`blocked: <the question>` sent to the agent), a doubt on wording is settled here.
 
 Done when: `go` has gone back and the agent has returned `stage: done`.
 

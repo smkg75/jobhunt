@@ -291,8 +291,9 @@ several writers is a corrupted log. Before the last gesture the agent stops and 
 answers, the rewritten bullets, the letter and the form read back from the DOM; the dispatcher checks
 them against the profile and answers `go` or corrections by message, applied in the same tab. This
 is a review between agents, not the approval loop removed on 2026-09-01: no per-field question
-reaches the candidate, and under `run` nobody is asked at all. The same channel carries a correction
-the candidate says mid-application — twice that evening one had meant reopening a filled form and
+reaches the candidate, and hands-off — under `run`, or asked for at launch — nobody is asked at
+all, which widens the entry of 2026-09-01 where only `run` had nobody to ask. The same channel
+carries a correction the candidate says mid-application — twice that evening one had meant reopening a filled form and
 replacing the attached resume. One agent rather than a preparer and an executor: the form is read
 before the resume is written, so a preparer without a browser cannot start alone, and the second cut
 would add two hand-offs per application for a gain nobody has measured. The agent's model is named
