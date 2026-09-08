@@ -17,6 +17,7 @@ directory outside it.
 | `/jobhunt:apply` | a posting URL, `last` or `current` | the form filled, `answers.md`, `applied.md`, a line in `job-history.md` § Applications and one in § Journal |
 | `/jobhunt:network-scan` | a contact count, or `all` (default 25) | openings at the companies of the candidate's LinkedIn contacts, logged in `job-history.md` § Runs |
 | `/jobhunt:run` | keywords, optional | a search pass, then an application for every High, and a four-block report in `state.md` § Last run |
+| `/jobhunt:help` | | the flow, and where this candidate stands; writes nothing |
 
 ## Install
 
