@@ -19,6 +19,7 @@ that platform, and files through a house form.
 | Deel | `ats/deel.md` | `jobs.deel.com/<slug>` |
 | Recruitee | `ats/recruitee.md` | `<slug>.recruitee.com/o/<job-slug>` |
 | Taleez | `ats/taleez.md` | `taleez.com/apply/<job-slug>`, `<slug>.taleez.com` |
+| Homerun | `ats/homerun.md` | `<slug>.homerun.co/<job-slug>`, the form at `/apply` |
 | House form | `ats/house-form.md` | no pattern above matches; the employer's own domain serves the form |
 
 ## Finding the ATS of a company
