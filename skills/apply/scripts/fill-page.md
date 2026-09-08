@@ -27,7 +27,7 @@ A cookie or consent banner swallows clicks until it is answered. Refuse the non-
 
 Two rules hold above the table:
 
-- **A signature stays the candidate's gesture.** Return the field; the main skill puts it in `answers.md`.
+- **A signature stays the candidate's gesture.** Return the field; the agent that dispatched you puts it in `answers.md`.
 - **Uploads and platform-specific field gestures follow `ats/index.md` § Fill and the `ats/<name>.md` of this form.**
 
 ## Two tries
@@ -39,7 +39,7 @@ After each field, confirm the value landed and the field shows no error state.
 ## Bounds
 
 - Fill top to bottom, in the order the page shows the fields.
-- Submit, Send, Save and Continue and Next belong to the main skill: leave them alone.
+- Submit, Send, Save and Continue and Next belong to the agent that dispatched you: leave them alone.
 - Validation errors left by an earlier attempt: read them and fix the fields they name.
 - A path `file_upload` refuses is outside what this session can share: return it in `fields_failed`, saying so.
 

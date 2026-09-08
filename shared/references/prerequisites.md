@@ -17,8 +17,9 @@ skill on: "`<file>` is missing. Run `/jobhunt:setup` first."
 | `DATA_DIR/linkedin-contacts.csv` | offers | optional | — | — | — | required | optional |
 
 The column is also the reading list. A skill run as a sub-agent reads the files marked for it and no
-others — `state.md` is the orchestrator's, never `apply`'s — and inside a file, the section its step
-names rather than the file. The directory outgrows the pass it serves: `job-history.md` alone passed
+others — `state.md` is the orchestrator's, never `apply`'s, and `job-history.md` is written by the
+side of `apply` that dispatches, never by its application agent — and inside a file, the section its
+step names rather than the file. The directory outgrows the pass it serves: `job-history.md` alone passed
 90 kB in three weeks, and each sub-agent that swallows it whole pays for it twice.
 
 Two files bend the rule:

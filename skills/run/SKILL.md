@@ -27,11 +27,13 @@ Done when: the list is back and every `High` has its folder under `jobs/`.
 
 ## Step 2 — Apply, in series
 
-For each `High`, one sub-agent: follow `skills/apply/SKILL.md` with the posting URL as its argument.
-It reads the send mode itself and stops where that mode stops.
+For each `High`, follow `skills/apply/SKILL.md` with the posting URL as its argument: this pass is
+its dispatcher. It sends one application agent, answers that agent's review here with no question to
+the candidate, and writes the journal. The agent reads the send mode itself and stops where that mode
+stops.
 
-**One at a time.** Two apply agents share the same Chrome and fight over its tabs; start the next
-only once the previous has returned.
+**One at a time.** Two application agents share the same Chrome and fight over its tabs; start the
+next only once the previous has returned `stage: done`.
 
 No cap - every `High` goes.
 

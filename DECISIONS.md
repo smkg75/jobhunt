@@ -280,6 +280,24 @@ apart on purpose: an ATS's automated acknowledgement is not the same signal as a
 folding the two into one event would erase a distinction that reasoning about an application's
 liveness needs.
 
+**One application, one agent, a review before the last gesture** · 2026-09-08
+`apply` is a dispatcher: the work of one application — posting, form, resume, letter, answers,
+fill, send — runs in a sub-agent, `skills/apply/scripts/apply-one.md`, one at a time, and the
+dispatcher keeps the journal, the applications table and `state.md`. Six applications filled in one
+evening inside a single main context had each reread the resume source and rendered the built PDF,
+and the context ran out long before the work did. An agent pays the profile and the source once per
+application and hands back a report; the journal keeps one writer, because an append-only log with
+several writers is a corrupted log. Before the last gesture the agent stops and hands back the
+answers, the rewritten bullets, the letter and the form read back from the DOM; the dispatcher checks
+them against the profile and answers `go` or corrections by message, applied in the same tab. This
+is a review between agents, not the approval loop removed on 2026-09-01: no per-field question
+reaches the candidate, and under `run` nobody is asked at all. The same channel carries a correction
+the candidate says mid-application — twice that evening one had meant reopening a filled form and
+replacing the attached resume. One agent rather than a preparer and an executor: the form is read
+before the resume is written, so a preparer without a browser cannot start alone, and the second cut
+would add two hand-offs per application for a gain nobody has measured. The agent's model is named
+in its own frontmatter, so no dispatcher picks one.
+
 ## The resume and the letter
 
 **One canonical per language, no translation** · 2026-09-01

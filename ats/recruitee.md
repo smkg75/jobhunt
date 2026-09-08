@@ -22,7 +22,7 @@ describes the whole form ahead of the browser:
 - `open_questions` — the custom questions, verbatim, each with its `kind` (`string`, `boolean`,
   `multi_choice`…) and its `required` flag.
 
-That answers step 4 of `skills/apply/SKILL.md` before a single screenshot, and the browser pass only
+That answers step 3 of `skills/apply/scripts/apply-one.md` before a single screenshot, and the browser pass only
 confirms it.
 
 ## Read a company's openings

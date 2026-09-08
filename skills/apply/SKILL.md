@@ -8,7 +8,9 @@ argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for
 
 One application = a folder, a form read whole before anything is written, a tailored resume, a letter when the form asks for one, answers drawn from those two, an event, a record. In that order; each step ends before the next begins.
 
-Conflicts between rules: `shared/references/priority-hierarchy.md`. Browser tab and session safety: `shared/references/browser-setup.md`.
+The work of one application runs in a sub-agent, `scripts/apply-one.md`, one per application and one at a time. This file is the dispatcher's side: the target, the dispatch, the review before the last gesture, the record. The dispatcher's context holds the agent's reports — never the form, the resume source or the pages.
+
+Conflicts between rules: `shared/references/priority-hierarchy.md`.
 
 ## Step 1 — Target
 
@@ -16,114 +18,54 @@ Resolve the data directory per `shared/references/data-directory.md`, then check
 
 `$ARGUMENTS`:
 
-- a URL → the job folder that matches it in `DATA_DIR/jobs/` (company slug, or the `URL` line of `posting.md`), otherwise a new job folder named as `shared/templates/posting.md` names it.
+- a URL → the job folder that matches it in `DATA_DIR/jobs/` (company slug, or the `URL` line of `posting.md`), otherwise a new job folder named as `shared/templates/posting.md` names it, created empty: the agent writes `posting.md`.
 - `last` → the most recently modified job folder.
-- `current` → the form already open in the active tab; match its URL against the job folders to load the context.
+- `current` → the form already open in the active tab; match its URL against the job folders to load the context, and keep the tab id for the dispatch.
 
-`posting.md` absent or without `## Brief`: read the posting and write the file on `shared/templates/posting.md` — header, `## Brief`, `## Posting`.
+`DATA_DIR/application-data.md` `## Form sheet` absent: build it from the canonical resume, and ask the candidate one grouped question covering what the resume leaves open — work authorisation, sponsorship, notice, salary expectation, EEO — then save it. Under `run` there is nobody to ask: a field the resume leaves open surfaces at the review or suspends the application.
 
-Done when: the folder exists and `posting.md` carries its header, `## Brief` and `## Posting`.
+Done when: the folder exists, and `## Form sheet` is on disk.
 
-## Step 2 — Application data
+## Step 2 — Dispatch
 
-Read `DATA_DIR/application-data.md` `## Form sheet`. Absent: build it from the canonical resume, and ask the candidate one grouped question covering what the resume leaves open — work authorisation, sponsorship, notice, salary expectation, EEO — then save it. Under `run` there is nobody to ask: a field the resume leaves open surfaces at step 7 or step 10.
+One sub-agent through the `Agent` tool, following `scripts/apply-one.md`, on the model its frontmatter names. Its input: `DATA_DIR`, the folder, the posting URL, and the tab id when the argument was `current`. It reads its own list and no other file — `job-history.md` and `state.md` are written here and never opened there.
 
-Done when: the form sheet is in context.
+**One at a time.** Two application agents share one Chrome and fight over its tabs: the next starts once the previous has returned `stage: done`.
 
-## Step 3 — Reach the form
+A correction the candidate says while the agent works goes to it at once by `SendMessage`, verbatim, whatever its stage. The agent writes it back to the data file it belongs to, then redoes what it touches.
 
-Match the URL against `ats/index.md` and `job-boards/index.md`:
+Done when: the agent has returned `stage: review` or `stage: done`.
 
-- ATS recognised → follow `ats/<name>.md`, sections **Recognize** and **Reach the form**.
-- Board with its own application flow → follow `job-boards/<board>.md` § Apply on this board.
-- Both offered on the same posting → the board's native flow goes first.
-- Only an email address in the posting → the mail channel; step 9 handles the send.
+## Step 3 — Review
 
-Unknown ATS, the generic path: navigate, screenshot, read the page, and work the form as it presents itself. A trap you meet there that belongs to the ATS itself, not to this posting, earns its file per `ats/index.md` § Adding an ATS.
+Skipped when the agent came back `done` without a review — it suspended the application first.
 
-Done when: the application form is open in a tab of the MCP group, or the mail channel is chosen.
+Before the last gesture — submit, send, or the close under `draft` — the agent stops and returns `stage: review`: the answers, the resume's summary block and the bullets it rewrote, the letter, and the form as read back from the DOM field by field, or the mail as composed. It waits in its tab. The tab is perishable (`ats/<name>.md` § Traps says which forms survive nothing), so the answer goes back without delay.
 
-## Step 4 — Scout the whole form
+Check, with `DATA_DIR/profile.md` read once per pass:
 
-Read the entire form before writing a single field. Scroll top to bottom, reading at each position, and record in `posting.md` `## Form`:
+- every figure, client, date and claim traces to the profile, the canonical resume or a correction the candidate said;
+- what the candidate lacks stays unnamed in free text, and a closed question gets the true answer (`preferences.md` `## Application rules`);
+- the characters `## Application rules` bans are absent from every value read back;
+- every value read back is the value decided — a field that came back different is named with the text it must hold;
+- the answers, the letter and the resume tell one story.
 
-- the resume field,
-- the cover letter field and its shape — text area or file,
-- every required field,
-- the custom questions, verbatim,
-- any block the candidate alone can decide, such as EEO.
+Answer by `SendMessage`: `go`, or the corrections, each naming the field, the bullet or the paragraph and the text to put there. The agent applies them, replaces the attachment when the resume changed, reads the form back again and returns a new `review`; the loop ends on `go`.
 
-Done when: `## Form` lists every field the form asks for, each marked required or optional.
+A doubt the files cannot settle: outside `run`, one grouped question to the candidate, saying the tab is waiting; under `run`, nobody is asked — a doubt on a fact suspends the application (`blocked: <the question>` sent to the agent), a doubt on wording is settled here.
 
-## Step 5 — Tailor the resume
+Done when: `go` has gone back and the agent has returned `stage: done`.
 
-Always, on every application. Run `skills/tailor-resume/SKILL.md` inline on this folder, passing `## Form` as extra requirements: the custom questions say what the company wants to see. It writes `posting.md` `## Match` and `tailored-resume/`.
+## Step 4 — Record
 
-Done when: `tailored-resume/` holds the file to upload.
+Written the moment the report is in, never at the end of the run:
 
-## Step 6 — Cover letter
-
-Only when `## Form` holds a cover letter field. Run `skills/cover-letter/SKILL.md` inline; the shape recorded at step 4 decides whether a PDF is built. No letter field, no letter.
-
-Done when: `cover-letter/` holds the letter in the shape the form takes, or the form has no letter field.
-
-## Step 7 — Answers to the custom questions
-
-For each question of `## Form`:
-
-1. `application-data.md` `## Reusable answers` — the same question answered for another company.
-2. Otherwise, from the letter and the tailored resume: the same evidence, the same figures, three to five sentences. `profile.md` feeds those two documents, and they feed the answers; it is not an answer source itself.
-3. A question whose honest answer needs a fact held by neither `profile.md` nor `application-data.md` suspends the application (step 10).
-
-A fresh answer goes into `## Reusable answers` (`question | answer | where, date`) the moment it is written. `answers.md`, on `shared/templates/answers.md`, is written question by question as the form goes, not afterwards.
-
-Done when: every question of `## Form` has its line in `answers.md`.
-
-## Step 8 — Fill
-
-One pass, through the `scripts/fill-page.md` subagent: the tab id, the field → value mapping built at steps 2, 5, 6 and 7, and the paths of the files to upload. The method approves that mapping — no per-field question reaches the candidate.
-
-Multi-page form: fill the page, advance the way `ats/<name>.md` describes, scout the new page as at step 4, fill again, until the review page.
-
-A field the subagent returns as failed after its two tries: its question and its answer go to `answers.md`, ready to paste; it does not send the application to `blocked` at step 10. A missed gesture is not a missing fact.
-
-Done when: every field of `## Form` is filled, uploaded, or written into `answers.md`.
-
-## Step 9 — Send mode
-
-`DATA_DIR/preferences.md` `## Send mode` decides the last gesture:
-
-- `draft` — everything filled, nothing submitted, tab closed. Event `ready`. Mail channel: a Gmail draft (`create_draft`) — subject `Application - <role> - <candidate name>`, written in the posting's language (`Candidature - <poste> - <nom>` for a French posting), plain hyphens only; the letter as body, the tailored resume attached.
-- `auto-submit` — submit without asking. Read the confirmation on screen (`get_page_text`) or in the confirmation mail: event `sent`. No confirmation read: event `sent-unconfirmed`. Mail channel: `send_message`, same subject, body and attachment.
-
-Done when: the application's event is one of `sent`, `sent-unconfirmed`, `ready`.
-
-## Step 10 — What suspends
-
-Event `blocked`, the reason named, the folder kept as it stands so the candidate resumes where it stopped:
-
-- technical or personality test,
-- video to record,
-- imposed salary range below the floor of `preferences.md`,
-- account to create with a password,
-- captcha, 2FA, "unusual activity",
-- a question needing a fact absent from both `profile.md` and `application-data.md`,
-- a must-have with no evidence, not even transferable,
-- a required field that step 4 did not put in `## Form`, a required EEO block left undecided included,
-- an attachment that cannot be uploaded,
-- a signature asked for under `auto-submit`.
-
-Done when: no line of this list applies, or the event is `blocked` with one line naming the blocker.
-
-## Step 11 — Record
-
-Written the moment each fact comes out, never at the end of the run:
-
-- one line in `DATA_DIR/job-history.md` `## Journal`: `date | folder | event | detail`, the event named at step 9 or step 10. This is the only place a status is ever written.
+- one line in `DATA_DIR/job-history.md` `## Journal`: `date | folder | event | detail`, the event the agent returned. This is the only place a status is ever written.
 - one line in `DATA_DIR/job-history.md` `## Applications`: `date | company | role | channel | fit | folder` — the candidature's identity, never its status.
-- `applied.md` in the folder, on `shared/templates/applied.md`: what was sent, when, on what channel, the pieces attached, the confirmation read on screen, any reservation. Immutable — none of it is rewritten later.
 - `DATA_DIR/state.md`: § Awaiting the candidate for what now waits on the candidate, § Open questions for the blocker when the event is `blocked`.
+
+`applied.md` is the agent's: it wrote it in the folder before returning.
 
 Nothing is paid for and no paid account is opened, at any step.
 
-Done when: the journal carries the event, `## Applications` carries the identity line, `applied.md` carries the immutable record, and `state.md` holds only what the candidate must still decide or answer. Report the company, the role, the channel, the event and the folder.
+Done when: the journal carries the event, `## Applications` carries the identity line, and `state.md` holds only what the candidate must still decide or answer. Report the company, the role, the channel, the event and the folder, with the letter and the answers as they went out and every reservation the agent named.

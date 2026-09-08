@@ -44,6 +44,6 @@ Done when: `cover-letter/` holds `cover-letter.md`, plus the filled source and a
 
 ## Step 4 — Report
 
-The letter itself, the two or three proofs it leans on, and any must-have the proof map left without evidence — that one sets the application to `blocked` in `skills/apply/SKILL.md` step 10.
+The letter itself, the two or three proofs it leans on, and any must-have the proof map left without evidence — that one sets the application to `blocked` in `skills/apply/scripts/apply-one.md` step 10.
 
 Done when: the letter, its proofs and any evidence-less must-have have been reported.

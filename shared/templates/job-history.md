@@ -13,7 +13,7 @@ _Append-only. One line per event, written the moment it happens. **Never edit or
 line.** A folder's current status is its last event here, and it is written nowhere else._
 
 Closed vocabulary, ten events:
-`ready` (filled, not submitted) · `blocked` (suspended, `apply` step 10) · `sent` · `sent-unconfirmed` ·
+`ready` (filled, not submitted) · `blocked` (suspended, `skills/apply/scripts/apply-one.md` step 10) · `sent` · `sent-unconfirmed` ·
 `ack` (an ATS's automated acknowledgement) · `reply` (a human reply) · `stage-booked` (an interview
 landed) · `rejected` · `withdrawn` (application pulled) · `archived`
 
