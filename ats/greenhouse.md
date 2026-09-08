@@ -80,12 +80,23 @@ attempt. Don't read that as the fix having failed, and don't loop on re-fixing a
 field.
 
 **"Location (City)" and single-select custom questions are react-select comboboxes.** `form_input`
-does not settle them, and no coordinate click is needed either: call `element.focus()` in
-`javascript_tool`, then send **Down** (opens the menu and highlights the first option) and **Return**
-(commits it) — `Down Down Return` for the second option. Afterwards the value is **not** in
-`input.value`, which stays empty: read it in the sibling `[class*="single-value"]` node instead (e.g.
-`Paris, France`). "Location (City)" can list the same city twice, and its selection fills a hidden
-latitude and longitude.
+never settles them. Two ways in, and **which one works is not predictable — the same board served
+both**, so try the first and verify, then fall back:
+
+1. **Keyboard.** Call `element.focus()` in `javascript_tool`, then send **Down** (opens the menu and
+   highlights the first option) and **Return** (commits it) — `Down Down Return` for the second
+   option. Worked on 2026-09-07.
+2. **Coordinate click.** Click the control at its coordinates to open the menu, then click the option
+   itself at its coordinates. Worked on 2026-09-08, when the keyboard path failed on all three of its
+   variants: `ref` click, synthetic `KeyboardEvent`, and a real `focus()` followed by Down.
+
+Both attempts were on `job-boards.eu.greenhouse.io/alma31`, a day apart, on single-select custom
+questions. **Never assume either one landed.** The value is **not** in `input.value`, which stays
+empty even when the field is correctly set: read the sibling `[class*="single-value"]` node instead
+(e.g. `Paris, France`, `Yes`). That read is the only proof, and it is what tells you to switch paths.
+
+"Location (City)" can list the same city twice, and its selection fills a hidden latitude and
+longitude.
 
 **A plain text field driven from `javascript_tool` needs the native setter, not `element.value =
 …`.** React ignores a direct assignment and keeps its own state regardless. Set it with
@@ -105,8 +116,23 @@ input: the file names appear as leaf nodes ending in `.pdf` inside the form.
 
 **An invisible reCAPTCHA sits in the footer.** Nothing to solve, it only fires on submit.
 
+**The form persists nothing.** No draft in `localStorage` (which carries only a Snowplow analytics
+queue) and none in `sessionStorage`: the state lives in the page's React alone. **A reload empties
+every field and drops the attachments**, so a form filled but not yet submitted survives only as long
+as its tab. Test it the cheap way before investing in a long fill: set a value in `#first_name`,
+reload, look. That matters when a pass fills a form it does not submit — the work is perishable, and
+whoever is meant to click has to be told not to reload.
+
+**`window.scrollTo` and `scrollIntoView` do nothing on the posting page.** Only wheel scrolling moves
+the view, and the posting runs about 4000 px before the form starts. A screenshot also comes back
+blank while the tab is in the background; one scroll wakes it.
+
 ## Last tested
 
+2026-09-08 — application submitted on `alma31` (EU board). react-select refused the keyboard path
+that had worked the day before on the same board and took a coordinate click instead, which is why
+that trap now carries both routes. Also found: the form persists nothing across a reload, and the
+page scrolls by wheel only.
+
 2026-09-07 — application submitted after a first rejected attempt: the intl-tel-input country+phone
-block and a 255-character custom-question cap were the two blockers; react-select now settles by
-keyboard focus, not a coordinate click.
+block and a 255-character custom-question cap were the two blockers.
