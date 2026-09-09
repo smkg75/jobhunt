@@ -60,8 +60,24 @@ real box is ticked. Filter on `input[type=checkbox]`. Two consents exist and the
 `candidate[consent_given]` is required to apply, `candidate[consent_given_future_jobs]` is a talent
 pool opt-in and stays unticked.
 
+**La soumission peut exiger une verification par e-mail, et la candidature n'est pas enregistree
+sans elle.** Le 2026-09-09 un formulaire soumis n'a pas rendu `/thanks` mais
+`/applications/email_verification_needed` : « Verify your email. We've sent you an email. Please
+click the verification link in the email to complete your application. » Le mail part dans la
+minute, depuis `no-reply@<slug>.teamtailor-mail.com`, objet « Complete the application for <role> ».
+Tant que le lien n'est pas clique, rien n'est arrive chez le recruteur. Deux consequences : lire
+l'URL apres le clic sur Submit avant de conclure quoi que ce soit, `/thanks` et
+`/applications/email_verification_needed` etant deux issues differentes ; et ne pas journaliser
+`sent` sur la seconde, sans quoi le compteur J+7 tourne sur une candidature qui n'existe pas.
+**Cliquer ce lien n'est pas le geste de l'agent** : il vit dans la boite mail du candidat, et
+c'est a lui de le faire, comme une signature electronique. La veille, une soumission sur le meme
+site carriere avec la meme adresse etait passee directement a `/thanks` : la verification n'est
+donc pas systematique, elle ne se devine pas, elle se lit.
+
 ## Last tested
 
-2026-09-06 — three applications submitted end to end on `/applications/new` (branded domains),
+2026-09-09 — une soumission de bout en bout sur `/applications/new` (domaine brande) : upload,
+lettre en textarea, deux consentements, clic Submit. Piege de la verification par e-mail trouve la.
+Earlier: 2026-09-06 — three applications submitted end to end on `/applications/new` (branded domains),
 cover letter as a textarea with no maxlength, upload and cookie-banner traps found. Earlier:
 2026-09-03, 2026-09-02.
