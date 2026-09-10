@@ -25,7 +25,7 @@ that platform, and files through a house form.
 ## Notify from
 
 The domain an ATS sends its mails from, which is rarely the domain that serves its form. This is
-what `skills/inbox/SKILL.md` casts its second net on: a mail lands under the platform's name long
+what `skills/check-replies/SKILL.md` casts its second net on: a mail lands under the platform's name long
 before the employer's own name appears anywhere in it.
 
 | ATS | Notify from |

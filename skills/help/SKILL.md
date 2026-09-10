@@ -18,7 +18,7 @@ job-search      one pass over the tracked companies and the boards, a folder per
 tailor-resume   the canonical resume bent to one posting, and its Match                   files
 cover-letter    the letter for one posting, with the proof map it rests on                files
 apply           one posting end to end: form filled, answers, applied.md, journal line    browser
-inbox           the boxes swept for answers, the journal brought up to date               mail
+check-replies   the boxes swept for answers, the journal brought up to date               mail
 network-scan    the companies where a contact already works, and what they are hiring     browser
 run             job-search, then apply on every High in series, then the report           browser
 ```

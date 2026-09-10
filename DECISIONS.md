@@ -300,7 +300,7 @@ would add two hand-offs per application for a gain nobody has measured. The agen
 in its own frontmatter, so no dispatcher picks one.
 
 **The answers received are swept by a command of their own** · 2026-09-10
-`inbox` reads the mailboxes and writes the four events a reply produces — `ack`, `reply`,
+`check-replies` reads the mailboxes and writes the four events a reply produces — `ack`, `reply`,
 `stage-booked`, `rejected`. Those four were in the journal's vocabulary from the start and had no
 writer at all: `apply` logs what goes out, nothing logged what came back, so a folder's last event
 stayed `sent` however the employer had answered. The cost was measured before the command existed.

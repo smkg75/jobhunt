@@ -1,10 +1,10 @@
 ---
-name: inbox
+name: check-replies
 description: Sweep the mailboxes for answers to the applications already sent, and bring the journal up to date.
 argument-hint: "how far back to read, such as 36h or 7d"
 ---
 
-# Inbox
+# Check replies
 
 The sweep. It reads the boxes an employer can answer on, turns each answer into one journal line,
 and reports. It is the only writer of the journal's answer events: `apply` writes what goes out,
@@ -22,7 +22,7 @@ back when there is none. The overlap is deliberate — a sweep that starts where
 loses whatever arrived while it ran.
 
 Resolve `DATA_DIR` per `shared/references/data-directory.md`, then check prerequisites per
-`shared/references/prerequisites.md`, the `inbox` column. One missing — stop and name it.
+`shared/references/prerequisites.md`, the `check-replies` column. One missing — stop and name it.
 
 ## Step 1 — What is still open
 

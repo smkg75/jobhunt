@@ -3,7 +3,7 @@
 Check the files a skill needs before its first step. A required file missing outside `setup` stops the
 skill on: "`<file>` is missing. Run `/jobhunt:setup` first."
 
-| File | setup | job-search | tailor-resume | cover-letter | apply | inbox | network-scan | run |
+| File | setup | job-search | tailor-resume | cover-letter | apply | check-replies | network-scan | run |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | `DATA_DIR/index.md` | creates | — | required | — | required | — | — | required |
 | `DATA_DIR/state.md` | creates | — | — | — | — | required | — | required |
