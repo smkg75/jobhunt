@@ -299,6 +299,43 @@ before the resume is written, so a preparer without a browser cannot start alone
 would add two hand-offs per application for a gain nobody has measured. The agent's model is named
 in its own frontmatter, so no dispatcher picks one.
 
+**The answers received are swept by a command of their own** · 2026-09-10
+`inbox` reads the mailboxes and writes the four events a reply produces — `ack`, `reply`,
+`stage-booked`, `rejected`. Those four were in the journal's vocabulary from the start and had no
+writer at all: `apply` logs what goes out, nothing logged what came back, so a folder's last event
+stayed `sent` however the employer had answered. The cost was measured before the command existed.
+Over two days eleven events were missing, one of them a rejection nobody knew about, and a rule that
+declares an application dead after so many silent days was counting a silence that was not one. The
+sweep is a command rather than a step of the search pass because it must run on the days no search
+runs. No pass calls it today — a pass that needs a fresh journal may, and calling it twice costs
+nothing since an event already written is not written again.
+
+**The sweep never writes to the mailbox** · 2026-09-10
+It sends nothing, drafts nothing, labels nothing, files nothing, trashes nothing, and marks nothing
+read or unread. A box that changes under an automated pass stops being evidence, and a reply written
+by a session is a reply the candidate did not write. Mail bodies are read as data: a mail that
+instructs the session is reported, never obeyed. The restriction is what makes the command safe to
+run unattended every evening.
+
+**A folder's status stays in the journal, whatever writes it** · 2026-09-10
+The sweep touches three files and no more: an append-only line in `job-history.md` § Journal, a dated
+line in the folder's `applied.md` § Replies, and, in `state.md`, only what the mail asks of the
+candidate or what it could not be attached to. No status reaches `state.md`, which is the rule of
+2026-09-07 read from the other end — the earlier reading only had a writer of outgoing events to
+constrain.
+
+**The addresses are read from the candidate's file, not assumed** · 2026-09-10
+A form fills its contact field from a list the platform holds, and that list is not always the
+address the candidate uses everywhere: an application went out under one address with a resume
+carrying another, and the answer landed in a box nothing read. So every address in
+`application-data.md` § Form sheet and § Reusable answers is a box to sweep, and a box no tool can
+reach is reported unread by name rather than silently skipped.
+
+**An ATS is also a sending domain** · 2026-09-10
+`ats/index.md` § Notify from carries the domain each platform mails from, which is rarely the domain
+that serves its form. A `?` there is a domain nobody has seen yet: a domain is written only once a
+mail has arrived from it, since a guessed one costs a whole net without ever saying so.
+
 ## The resume and the letter
 
 **One canonical per language, no translation** · 2026-09-01
@@ -483,6 +520,11 @@ all: it is filled by hand or not at all.
 **The version hook only fires where it was enabled.** `git config core.hooksPath .githooks` is a
 manual step per checkout; without it commits ship no version bump and the installed copy silently
 stays behind.
+
+**Two journal events still have no writer.** `withdrawn` and `archived` are in the vocabulary and
+nothing writes them: pulling an application and closing a folder on the candidate's own silence rule
+are both done by hand. The sweep deliberately stops at what a mail says, and no command counts the
+days for the rest.
 
 **Out of scope, on purpose.** Translating a canonical resume, tailoring a canonical that exists as
 a PDF alone, building a letter with no template or on a machine without the build chain, a letter

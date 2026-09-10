@@ -22,6 +22,34 @@ that platform, and files through a house form.
 | Homerun | `ats/homerun.md` | `<slug>.homerun.co/<job-slug>`, the form at `/apply` |
 | House form | `ats/house-form.md` | no pattern above matches; the employer's own domain serves the form |
 
+## Notify from
+
+The domain an ATS sends its mails from, which is rarely the domain that serves its form. This is
+what `skills/inbox/SKILL.md` casts its second net on: a mail lands under the platform's name long
+before the employer's own name appears anywhere in it.
+
+| ATS | Notify from |
+|---|---|
+| Greenhouse | `greenhouse-mail.io`, `us.greenhouse-mail.io` |
+| Lever | `hire.lever.co`, `lever.co` |
+| Workday | ? |
+| Teamtailor | `teamtailor-mail.com` |
+| Ashby | `ashbyhq.com` |
+| Workable | `workable.com` |
+| Rippling | ? |
+| Deel | ? |
+| Recruitee | `recruitee.com` |
+| Taleez | `taleez.com` |
+| Homerun | ? |
+| House form | the employer's own domain, and no pattern |
+
+A `?` is a domain nobody has seen yet, not an ATS that sends nothing: the sweep that reads one fills
+the row. A domain is written here only once a mail has actually arrived from it — guessing one costs
+a whole net, since a domain that sends nothing returns nothing and says nothing about it.
+
+Boards send under their own domains too, and a native application is answered there rather than by
+an ATS.
+
 ## Finding the ATS of a company
 
 A company whose `ATS` and `slug` columns are blank in `DATA_DIR/companies.md`: probe the keyless
