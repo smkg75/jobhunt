@@ -1,4 +1,4 @@
-# jobhunt
+# 💼 jobhunt
 
 A Claude Code plugin that carries a job search from the first query to the submitted form. It reads
 the candidate's own files, searches the boards, scores each posting, tailors the resume and the cover
@@ -6,7 +6,7 @@ letter to that posting, fills the application form in Chrome through the Claude 
 and logs what went out. The plugin holds the method; every fact about the candidate lives in a data
 directory outside it.
 
-## Skills
+## 🧾 Skills
 
 | Command | Argument | Produces |
 |---|---|---|
@@ -20,7 +20,7 @@ directory outside it.
 | `/jobhunt:run` | keywords, optional | a search pass, then an application for every High, and a four-block report in `state.md` § Last run |
 | `/jobhunt:help` | | the flow, and where this candidate stands; writes nothing |
 
-## Install
+## 📦 Install
 
 ```bash
 # from a local checkout
@@ -37,7 +37,7 @@ and fills the first files. Every other skill reads that path
 
 Browser work needs Chrome running with the Claude in Chrome extension active.
 
-## Editing the plugin
+## 🛠️ Editing the plugin
 
 The install is a copy, refreshed only when the version changes. `git config core.hooksPath .githooks`
 once in the checkout: every commit then bumps the patch version, and `claude plugin update
@@ -46,7 +46,7 @@ jobhunt@jobhunt` picks the new copy up.
 [`DECISIONS.md`](DECISIONS.md) holds the arbitrages the method rests on, each with the reason that
 settled it, and the holes left open on purpose. Read the entry before changing what it settles.
 
-## The data directory
+## 🗂️ The data directory
 
 ```
 DATA_DIR/
@@ -74,7 +74,7 @@ DATA_DIR/
         └── applied.md          date, channel, send mode, confirmation, replies
 ```
 
-## Boards and ATS covered
+## 🧭 Boards and ATS covered
 
 | Board | File |
 |---|---|
@@ -95,16 +95,16 @@ DATA_DIR/
 | Recruitee | `ats/recruitee.md` |
 | Taleez | `ats/taleez.md` |
 
-## Adding a board or an ATS
+## ➕ Adding a board or an ATS
 
 Write one file on the skeleton its index defines, then add its row there — `job-boards/index.md`
 § Adding a board, `ats/index.md` § Adding an ATS. The skills read the index and pick the new file up.
 
-## Credit
+## 🙏 Credit
 
 Forked from Proficiently's Claude skills plugin (MIT) —
 [proficientlyjobs/proficiently-claude-skills](https://github.com/proficientlyjobs/proficiently-claude-skills).
 
-## License
+## 📄 License
 
 MIT
