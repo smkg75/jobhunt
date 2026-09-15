@@ -21,8 +21,9 @@ nothing.
 back when there is none. The overlap is deliberate — a sweep that starts where the last one stopped
 loses whatever arrived while it ran.
 
-Resolve `DATA_DIR` per `shared/references/data-directory.md`, then check prerequisites per
-`shared/references/prerequisites.md`, the `check-replies` column. One missing — stop and name it.
+Resolve `DATA_DIR` per the plugin root's `shared/references/data-directory.md` (`shared/` sits
+beside `skills/`, not inside it), then check prerequisites per `shared/references/prerequisites.md`,
+the `check-replies` column. One missing — stop and name it.
 
 ## Step 1 — What is still open
 

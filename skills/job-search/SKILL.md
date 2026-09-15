@@ -8,7 +8,8 @@ argument-hint: "optional search keywords"
 
 One pass: tracked companies first, then the boards, every posting opened, every posting a verdict.
 
-Instructions that conflict resolve through `shared/references/priority-hierarchy.md`.
+Instructions that conflict resolve through the plugin root's `shared/references/priority-hierarchy.md`
+(`shared/` sits beside `skills/`, not inside it).
 
 ## Step 0 — Load the data directory
 

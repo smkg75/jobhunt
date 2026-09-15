@@ -8,7 +8,8 @@ argument-hint: "number of contacts (default 25) or 'all'"
 
 A warm introduction beats a cold form. This pass walks the candidate's LinkedIn connections back to their companies, reads what those companies have open, and ranks it.
 
-Instructions that conflict resolve through `shared/references/priority-hierarchy.md`.
+Instructions that conflict resolve through the plugin root's `shared/references/priority-hierarchy.md`
+(`shared/` sits beside `skills/`, not inside it).
 
 ## Step 0 — Load the data directory
 

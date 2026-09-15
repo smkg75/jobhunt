@@ -12,7 +12,8 @@ The work of one application runs in a sub-agent, `scripts/apply-one.md`, one per
 
 **Hands-off** means nobody is asked, at any step: under `run`, or when the candidate said so at launch — `hands-off` after the argument, or in their own words. Otherwise one grouped question may reach the candidate, only where this file says so.
 
-Conflicts between rules: `shared/references/priority-hierarchy.md`.
+Conflicts between rules: the plugin root's `shared/references/priority-hierarchy.md` (`shared/` sits
+beside `skills/`, not inside it).
 
 ## Step 1 — Target
 

@@ -16,9 +16,9 @@ Each step ends on its own criterion. The next one starts after it.
 
 ## Step 0 — Data directory
 
-Resolve `DATA_DIR` with `shared/references/data-directory.md`. No marker line means a fresh
-install: propose the default path that reference names, accept whatever path the candidate names
-instead, create the directory.
+Resolve `DATA_DIR` with the plugin root's `shared/references/data-directory.md` (`shared/` sits
+beside `skills/`, not inside it). No marker line means a fresh install: propose the default path
+that reference names, accept whatever path the candidate names instead, create the directory.
 
 Write the `JobHunt data:` marker into `~/.claude/CLAUDE.md`, in the form
 `shared/references/data-directory.md` reads back; create that file when it is missing.

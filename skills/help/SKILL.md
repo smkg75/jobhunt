@@ -27,8 +27,9 @@ Done when: the eight lines are printed.
 
 ## Step 2 — Where the candidate stands
 
-Resolve `DATA_DIR` per `shared/references/data-directory.md`. No marker: say the machine is fresh
-and that `/jobhunt:setup` comes first; stop.
+Resolve `DATA_DIR` per the plugin root's `shared/references/data-directory.md` (`shared/` sits
+beside `skills/`, not inside it). No marker: say the machine is fresh and that `/jobhunt:setup`
+comes first; stop.
 
 Found: read `DATA_DIR/state.md` and `DATA_DIR/job-history.md`. Print, in this order:
 

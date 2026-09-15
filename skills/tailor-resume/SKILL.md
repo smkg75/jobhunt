@@ -8,7 +8,8 @@ argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for
 
 Reorganise and rewrite what the candidate has actually done so a recruiter sees the fit in seven seconds. Nothing is invented; the roles, titles and dates of the canonical stay as they are.
 
-Conflicts between rules: `shared/references/priority-hierarchy.md`.
+Conflicts between rules: the plugin root's `shared/references/priority-hierarchy.md` (`shared/` sits
+beside `skills/`, not inside it).
 
 ## Step 1 — Load the job
 

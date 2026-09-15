@@ -8,7 +8,8 @@ argument-hint: "job URL, 'last' for the most recent job folder, or 'current' for
 
 One letter answers one posting, from evidence already mapped. The proof map is written first: it decides what the letter can claim. The letter has the shape a French recruiter expects — a subject line, then three paragraphs read as "Vous, Je, Nous" — and, as a file, sits on the candidate's own template.
 
-Conflicts between rules: `shared/references/priority-hierarchy.md`.
+Conflicts between rules: the plugin root's `shared/references/priority-hierarchy.md` (`shared/` sits
+beside `skills/`, not inside it).
 
 ## Step 1 — Load
 
