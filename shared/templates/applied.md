@@ -15,7 +15,7 @@ Resume: tailored | canonical
 
 ## Replies
 
-One dated line per reply received, and one per `feedback asked` sent by `check-replies ask-feedback`.
+One dated line per reply received, and one per `feedback asked` sent by `check-replies --ask-feedback`.
 ```
 
 A folder archived before it was ever filled may hold no `applied.md` at all — its only record is the

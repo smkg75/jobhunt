@@ -332,7 +332,7 @@ carrying another, and the answer landed in a box nothing read. So every address 
 reach is reported unread by name rather than silently skipped.
 
 **Asking why a rejection fell is opt-in** · 2026-09-15
-`check-replies ask-feedback` sends one short reply in the thread of each rejection the sweep has just
+`check-replies --ask-feedback` sends one short reply in the thread of each rejection the sweep has just
 written, asking what weighed against the application. It narrows the entry "The sweep never writes to
 the mailbox" rather than reversing it: without the argument the sweep stays read-only, which is what
 keeps an unattended evening run safe. Only a rejection written by this sweep is asked, so the journal's
