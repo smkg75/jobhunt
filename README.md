@@ -15,7 +15,7 @@ directory outside it.
 | `/jobhunt:tailor-resume` | a posting URL, `last` or `current` | `posting.md` § Match and the built resume in `tailored-resume/` |
 | `/jobhunt:cover-letter` | a posting URL, `last` or `current` | `cover-letter/cover-letter.md`, plus the letter on the candidate's template as a PDF when the form wants a file |
 | `/jobhunt:apply` | a posting URL, `last` or `current` | the form filled, `answers.md`, `applied.md`, a line in `job-history.md` § Applications and one in § Journal |
-| `/jobhunt:check-replies` | how far back to read, such as `36h` or `7d` | one `ack`, `reply`, `stage-booked` or `rejected` line in `job-history.md` § Journal per answer received, the replies in `applied.md`, and what the mail asks for in `state.md` |
+| `/jobhunt:check-replies` | how far back to read, such as `36h` or `7d`; `ask-feedback` to ask each new rejection why | one `ack`, `reply`, `stage-booked` or `rejected` line in `job-history.md` § Journal per answer received, the replies in `applied.md`, and what the mail asks for in `state.md`; with `ask-feedback`, one short reply sent in each new rejection's thread |
 | `/jobhunt:network-scan` | a contact count, or `all` (default 25) | openings at the companies of the candidate's LinkedIn contacts, logged in `job-history.md` § Runs |
 | `/jobhunt:run` | keywords, optional | a search pass, then an application for every High, and a four-block report in `state.md` § Last run |
 | `/jobhunt:help` | | the flow, and where this candidate stands; writes nothing |

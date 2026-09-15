@@ -331,6 +331,16 @@ carrying another, and the answer landed in a box nothing read. So every address 
 `application-data.md` § Form sheet and § Reusable answers is a box to sweep, and a box no tool can
 reach is reported unread by name rather than silently skipped.
 
+**Asking why a rejection fell is opt-in** · 2026-09-15
+`check-replies ask-feedback` sends one short reply in the thread of each rejection the sweep has just
+written, asking what weighed against the application. It narrows the entry "The sweep never writes to
+the mailbox" rather than reversing it: without the argument the sweep stays read-only, which is what
+keeps an unattended evening run safe. Only a rejection written by this sweep is asked, so the journal's
+no-duplicate rule is also what stops a folder being asked twice. A no-reply sender, a mail that already
+refuses individual feedback, a thread the candidate has already answered, or a box its tool cannot send
+from gets no question and a named reason in the report. The request is recorded in `applied.md`
+§ Replies and not in the journal, because it changes nothing about the folder's status.
+
 **An ATS is also a sending domain** · 2026-09-10
 `ats/index.md` § Notify from carries the domain each platform mails from, which is rarely the domain
 that serves its form. A `?` there is a domain nobody has seen yet: a domain is written only once a
